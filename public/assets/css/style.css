@@ -1,0 +1,123 @@
+/* ------------------------------------- */
+    /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
+    /* ------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+body {
+    margin: 0;
+    font-family: oswald;  
+}
+    h1{
+      display: block;
+      font-family: bebas neue;
+      font-size: large;
+      color: #bb382a;
+      border-color: #1B3561;
+      text-align: center;
+    }
+
+    /* Le conteneur principal de la navigation */
+    .navbar {
+      background-color: #D4B1A8;
+      color: black;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between; /* Pour séparer le logo et le menu */
+      align-items: center;
+    }
+
+    .connexion {
+        display: block;
+        font-size: 3rem;
+        font-weight: bold;
+        justify-self: end;
+    }
+    .logo {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    /* Le bouton du menu burger */
+    .menu-burger {
+      display: block; /* Visible par défaut sur mobile */
+      font-size: 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: black;
+    }
+
+    /* La liste des liens de navigation */
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      /* Menu masqué sur mobile et affiché sur desktop */
+      display: none; 
+     }
+
+    .nav-links li a {
+      color: black;
+      text-decoration: none;
+      display: block;
+      padding: 10px 15px;
+      text-align: center;
+    }
+
+    .nav-links li a:hover {
+      background-color: #575757;
+    }
+
+    .presentation{
+      background-color: #778496;
+    }
+
+    .actu{
+      background-color: #d4b1a8;
+    }
+
+    .planning{
+      background-color: #d4b1a8;
+    }
+    .boutique{
+      background-color: #778496;
+    }
+
+
+    /* ------------------------------------- */
+    /* 2. MEDIA QUERY POUR DESKTOP (768px et plus) */
+    /* ------------------------------------- */
+
+    /* Quand la largeur de l'écran est de 768px ou plus, les styles suivants s'appliquent */
+    @media (min-width: 768px) {
+      
+      .navbar {
+        justify-content: flex-start; /* Aligne tout au début */
+      }
+
+      /* 2.1 Masquer le bouton burger sur desktop */
+      .menu-burger {
+        display: none;
+      }
+
+      /* 2.2 Afficher la liste des liens en ligne */
+      .nav-links {
+        display: flex; /* Utilise Flexbox pour aligner horizontalement les <li> */
+        margin-left: 20px; /* Petit espace entre le logo et le menu */
+      }
+      
+      /* 2.3 Les éléments de liste alignés côte à côte */
+      .nav-links li {
+        margin: 0 10px; /* Espace entre les liens */
+      }
+      
+      .nav-links li a {
+        padding: 5px 10px; /* Ajuste l'espacement pour l'alignement */
+      }
+    }
