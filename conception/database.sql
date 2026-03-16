@@ -6,9 +6,21 @@ CREATE USER IF NOT EXISTS 'boxing_admin'@'localhost' IDENTIFIED BY 'boxingclublh
 
 GRANT ALL PRIVILEGES ON boxingclublh.* TO 'boxing_admin'@'localhost';
 
-CREATE TABLE IF NOT EXISTS users(
-   id_user INT AUTO_INCREMENT,
-   role VARCHAR(50),
+CREATE TABLE users(
+   Id_user INT AUTO_INCREMENT,
+   role INT,
+   firstname VARCHAR(50) ,
+   birthdate VARCHAR(50) ,
+   email VARCHAR(50) ,
+   password VARCHAR(255) ,
+   lastname VARCHAR(50) ,
+   Id_try_class INT,
+   PRIMARY KEY(Id_user),
+   FOREIGN KEY(Id_try_class) REFERENCES try_classes(Id_try_class)
+)ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS members(
+   id_member INT AUTO_INCREMENT,
    firstname VARCHAR(50),
    lastname VARCHAR(50),
    birthdate DATE,
@@ -18,10 +30,13 @@ CREATE TABLE IF NOT EXISTS users(
    city VARCHAR(50),
    email VARCHAR(50),
    phone_number VARCHAR(15),
-   password VARCHAR(50),
    profil_picture MEDIUMBLOB,
    medical_certificate MEDIUMBLOB,
-   PRIMARY KEY(id_user)
+   Id_user INT NOT NULL,
+   PRIMARY KEY(id_member),
+   UNIQUE(Id_user),
+   FOREIGN KEY(Id_user) REFERENCES users(Id_user)
+
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS shops(
@@ -46,10 +61,10 @@ CREATE TABLE IF NOT EXISTS legal_representatives(
    Id_legal_representative INT AUTO_INCREMENT,
    name_legal_repres VARCHAR(50),
    phone_legal_repres VARCHAR(15),
-   id_user INT NOT NULL,
+   id_member INT NOT NULL,
    PRIMARY KEY(Id_legal_representative),
-   UNIQUE(id_user),
-   FOREIGN KEY(id_user) REFERENCES users(id_user)
+   UNIQUE(id_member),
+   FOREIGN KEY(id_member) REFERENCES members(id_member)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS orders(
@@ -62,9 +77,9 @@ CREATE TABLE IF NOT EXISTS orders(
    order_number INT,
    invoice_date DATE,
    invoice_number INT,
-   id_user INT NOT NULL,
+   id_member INT NOT NULL,
    PRIMARY KEY(Id_order),
-   FOREIGN KEY(id_user) REFERENCES users(id_user)
+   FOREIGN KEY(id_member) REFERENCES members(id_member)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS competitions(
@@ -87,10 +102,10 @@ CREATE TABLE IF NOT EXISTS Try_classes(
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS competitionRegister(
-   id_user INT,
+   id_member INT,
    Id_competition INT,
-   PRIMARY KEY(id_user, Id_competition),
-   FOREIGN KEY(id_user) REFERENCES users(id_user),
+   PRIMARY KEY(id_member, Id_competition),
+   FOREIGN KEY(id_member) REFERENCES members(id_member),
    FOREIGN KEY(Id_competition) REFERENCES competitions(Id_competition)
 ) ENGINE=InnoDB;
 
@@ -102,14 +117,6 @@ CREATE TABLE IF NOT EXISTS recover(
    FOREIGN KEY(id_shop) REFERENCES shops(id_shop),
    FOREIGN KEY(id_shop_1) REFERENCES shops(id_shop),
    FOREIGN KEY(Id_order) REFERENCES orders(Id_order)
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS tryRegister(
-   id_user INT,
-   Id_Try_class INT,
-   PRIMARY KEY(id_user, Id_Try_class),
-   FOREIGN KEY(id_user) REFERENCES users(id_user),
-   FOREIGN KEY(Id_Try_class) REFERENCES Try_classes(Id_Try_class)
 ) ENGINE=InnoDB;
 
 FLUSH PRIVILEGES;

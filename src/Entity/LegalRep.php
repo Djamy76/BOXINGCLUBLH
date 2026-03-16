@@ -5,14 +5,14 @@ class LegalRep {
     private ?int $Id_legal_representative;
     private string $name_legal_repres;
     private string $phone_legal_repres;
-    private int $Id_user;
+    private int $id_user;
     private ?Users $users;
 
-    public function __construct(string $name_legal_repres, string $phone_legal_repres, int $Id_user, ?int $Id_legal_representative= null) {
+    public function __construct(string $name_legal_repres, string $phone_legal_repres, int $id_user, ?int $Id_legal_representative= null) {
         $this->Id_legal_representative=$Id_legal_representative;  
         $this->name_legal_repres=$name_legal_repres;
         $this->phone_legal_repres=$phone_legal_repres;
-        $this->Id_user=$Id_user;
+        $this->id_user=$id_user;
     }
 
     public function getIdLegalRepresentative(): ?int { return $this->Id_legal_representative;}
@@ -32,10 +32,10 @@ class LegalRep {
     }
 
 
-    public function getIdUser(): int { return $this->Id_user;}
+    public function getIdUser(): int { return $this->id_user;}
 
-    public function setIdUser(int $Id_user): self {
-        $this->Id_user = $Id_user;
+    public function setIdUser(int $id_user): self {
+        $this->id_user = $id_user;
         return $this;
     }
 

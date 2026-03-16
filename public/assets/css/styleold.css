@@ -1,0 +1,269 @@
+/* ------------------------------------- */
+    /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
+    /* ------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+/* --- VARIABLES DE TA PALETTE MOONBOARD --- */
+:root {
+    --club-red: #bb382a;
+    --club-blue: #1b3561;
+    --club-bordeaux: #5b302c;
+    --club-orange: #c1643e;
+    --text-light: #f4f4f4;
+}
+/* --- CONFIGURATION DES POLICES --- */
+/* Assure-toi que l'import Google Fonts pour Bebas Neue est bien présent en haut du fichier */
+
+.home-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Bebas Neue', sans-serif; /* Police phare du moonboard */
+}
+
+/* --- TITRE --- */
+.home-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.main-title {
+    font-size: 5rem;
+    color: #1b3561; /* Ton Bleu foncé */
+    margin: 0;
+    line-height: 1;
+}
+
+.main-title .accent {
+    color: #bb382a; /* Ton Rouge vif */
+}
+
+.divider {
+    height: 5px;
+    width: 80px;
+    background: #bb382a;
+    margin: 10px auto;
+}
+
+.welcome-msg {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    color: #333;
+    letter-spacing: 1px;
+}
+
+/* --- GRILLE DE CARTES --- */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.menu-card {
+    position: relative;
+    height: 350px;
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+    text-decoration: none;
+    color: white;
+    overflow: hidden;
+    border-radius: 4px; /* Coins légèrement arrondis pour le côté moderne */
+    transition: all 0.3s ease;
+}
+
+/* Couleurs du Moonboard appliquées aux cartes */
+.actu { background-color: #1b3561; }     /* Bleu foncé */
+.planning { background-color: #5b302c; } /* Bordeaux foncé */
+.boutique { background-color: #c1643e; } /* Orange/Brun */
+
+.menu-card:hover {
+    transform: scale(1.02);
+    filter: brightness(1.2);
+}
+
+.menu-card .content {
+    position: relative;
+    z-index: 2;
+}
+
+.menu-card h2 {
+    font-size: 2.5rem;
+    margin: 0;
+    line-height: 1;
+}
+
+.menu-card span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Effet d'ombre sur le texte pour la lisibilité */
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    z-index: 1;
+}
+body {
+    margin: 0;
+    font-family: oswald;  
+}
+
+/* Container global pour espacer le contenu du header */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement */
+    justify-content: center; /* Centre verticalement */
+    min-height: 70vh; /* Prend 70% de la hauteur d'écran */
+}
+
+/* Style de base pour toutes les alertes */
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-family: sans-serif;
+    animation: fadeIn 0.5s ease-in; /* Petite animation à l'apparition */
+}
+
+/* Style spécifique pour l'erreur (Rouge) */
+.alert-danger {
+    color: #a94442;
+    background-color:blue;
+    border-color: #ebccd1;
+}
+
+/* Style spécifique pour le succès (Vert) */
+.alert-success {
+    color: #3c763d;
+    background-color: blue;
+    border-color: black;
+}
+
+/* Animation fluide */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+    h1{
+      display: block;
+      font-family: bebas neue;
+      font-size: large;
+      color: #bb382a;
+      border-color: #1B3561;
+      text-align: center;
+    }
+
+    /* Le conteneur principal de la navigation */
+    .navbar {
+      background-color: #D4B1A8;
+      color: black;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between; /* Pour séparer le logo et le menu */
+      align-items: center;
+    }
+
+    .connexion {
+        display: block;
+        font-size: 3rem;
+        font-weight: bold;
+        justify-self: end;
+    }
+    .logo {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    /* Le bouton du menu burger */
+    .menu-burger {
+      display: block; /* Visible par défaut sur mobile */
+      font-size: 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: black;
+    }
+
+    /* La liste des liens de navigation */
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      /* Menu masqué sur mobile et affiché sur desktop */
+      display: none; 
+     }
+
+    .nav-links li a {
+      color: black;
+      text-decoration: none;
+      display: block;
+      padding: 10px 15px;
+      text-align: center;
+    }
+
+    .nav-links li a:hover {
+      background-color: #575757;
+    }
+
+    .presentation{
+      background-color: #778496;
+    }
+
+    .actu{
+      background-color: #d4b1a8;
+    }
+
+    .planning{
+      background-color: #d4b1a8;
+    }
+    .boutique{
+      background-color: #778496;
+    }
+
+
+    /* ------------------------------------- */
+    /* 2. MEDIA QUERY POUR DESKTOP (768px et plus) */
+    /* ------------------------------------- */
+
+    /* Quand la largeur de l'écran est de 768px ou plus, les styles suivants s'appliquent */
+    @media (min-width: 768px) {
+      
+      .navbar {
+        justify-content: flex-start; /* Aligne tout au début */
+      }
+
+      /* 2.1 Masquer le bouton burger sur desktop */
+      .menu-burger {
+        display: none;
+      }
+
+      /* 2.2 Afficher la liste des liens en ligne */
+      .nav-links {
+        display: flex; /* Utilise Flexbox pour aligner horizontalement les <li> */
+        margin-left: 20px; /* Petit espace entre le logo et le menu */
+      }
+      
+      /* 2.3 Les éléments de liste alignés côte à côte */
+      .nav-links li {
+        margin: 0 10px; /* Espace entre les liens */
+      }
+      
+      .nav-links li a {
+        padding: 5px 10px; /* Ajuste l'espacement pour l'alignement */
+      }
+    }

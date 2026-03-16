@@ -1,0 +1,109 @@
+/* ------------------------------------- */
+    /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
+    /* ------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+
+:root {
+    --red-boxing: #bb382a;
+    --blue-dark: #1b3561;
+    --bordeaux: #5b302c;
+    --white: #f4f4f4;
+    --black: #121212;
+}
+
+body {
+    background-image: url(images/image2.jpg);
+    /*background-color: var(--black);*/
+    color: var(--white);
+    font-family: 'Oswald', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.auth-container {
+    background: linear-gradient(145deg, var(--blue-dark), #0d1a30);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 400px;
+    border-top: 5px solid var(--red-boxing);
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    color: var(--red-boxing);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background: #e0e0e0;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--red-boxing);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 1rem;
+}
+
+button:hover { background-color: #962d22; transform: scale(1.02); }
+
+.error-msg {
+    background: blue;
+    color: #990000;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+a { color: var(--white); text-decoration: underline; font-size: 0.8rem; }
+
+.dashboard-menu {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 4px;
+    border-left: 4px solid var(--red-boxing);
+}
+
+.success-msg {
+    background: blue;
+    color: #155724;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+}

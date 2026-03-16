@@ -13,11 +13,11 @@ class LegalRepRepository{
 
     // CRUD - CREATE
     public function create(LegalRep $legalRep): bool {
-        $stmt=$this->pdo->prepare("INSERT INTO legal_representatives (name_legal_repres, phone_legal_repres, Id_user) 
-            VALUES (:name_legal_repres, :phone_legal_repres, :Id_user)");
+        $stmt=$this->pdo->prepare("INSERT INTO legal_representatives (name_legal_repres, phone_legal_repres, id_user) 
+            VALUES (:name_legal_repres, :phone_legal_repres, :id_user)");
         $stmt->bindValue(":name_legal_repres",$legalRep->getNameLegalRepres());
         $stmt->bindValue(":phone_legal_repres",$legalRep->getPhoneLegalRepres());
-        $stmt->bindValue(":Id_user",$legalRep->getIdUser());
+        $stmt->bindValue(":id_user",$legalRep->getIdUser());
         $result = $stmt->execute();
         return $result;
     }
@@ -28,14 +28,14 @@ class LegalRepRepository{
         $stmt->execute();
         $row=$stmt->fetch();
         if (!$row) return null;
-        $LegalRep=new LegalRep($row[''], $row['name_legal_repres'],$row['phone_legal_repres'],$row['Id_user'],$row['Id_legal_representative']);
+        $LegalRep=new LegalRep($row[''], $row['name_legal_repres'],$row['phone_legal_repres'],$row['id_user'],$row['Id_legal_representative']);
         return $LegalRep;
     }
     public function findAll(): array {
         $stmt = $this->pdo->query("SELECT * FROM legal_representatives");
         $LegalReps=[];
         while ($row=$stmt->fetch()) {
-            $LegalReps[] = new LegalRep($row['name_legal_repres'],$row['phone_legal_repres'],$row['Id_user'],$row['Id_legal_representative']);
+            $LegalReps[] = new LegalRep($row['name_legal_repres'],$row['phone_legal_repres'],$row['id_user'],$row['Id_legal_representative']);
         }
         return $LegalReps;
     }
@@ -44,7 +44,7 @@ class LegalRepRepository{
         $stmt = $this->pdo->prepare("UPDATE legal_representatives SET name_legal_repres=:name_legal_repres, phone_legal_repres=:phone_legal_repres, Id_user=:Id_user WHERE Id_legal_representative=:id");
         $stmt->bindValue(":name_legal_repres",$legalRep->getNameLegalRepres());
         $stmt->bindValue(":phone_legal_repres",$legalRep->getPhoneLegalRepres());
-        $stmt->bindValue(":Id_user",$legalRep->getIdUser());
+        $stmt->bindValue(":id_user",$legalRep->getIdUser());
         $stmt->bindValue(":Id",$legalRep->getIdLegalRepresentative());
         $result = $stmt->execute();
         return $result;

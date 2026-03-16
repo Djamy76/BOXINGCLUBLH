@@ -1,123 +1,351 @@
-/* ------------------------------------- */
-    /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
-    /* ------------------------------------- */
+/* ----------------------------------------------------------- */
+/* 1. IMPORTS & VARIABLES                                      */
+/* ----------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;700&family=Source+Sans+3:wght@400;700&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+:root {
+    /* Ta palette Moonboard */
+    --club-red: #bb382a;
+    --club-blue: #1b3561;
+    --club-bordeaux: #5b302c;
+    --club-orange: #c1643e;
+    --club-dark: #121212;
+    --club-white: #ffffff;
+    --club-gray: #f4f4f4;
+    
+    /* Polices */
+    --font-main: 'Bebas Neue', sans-serif;
+    --font-secondary: 'Oswald', sans-serif;
+    --font-text: 'Source Sans 3', sans-serif;
+}
 
-@import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
-
-
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+/* ----------------------------------------------------------- */
+/* 2. RÉGLAGES GÉNÉRAUX                                        */
+/* ----------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-    margin: 0;
-    font-family: oswald;  
+    font-family: var(--font-text);
+    background-color: var(--club-gray);
+    color: var(--club-dark);
+    line-height: 1.6;
 }
-    h1{
-      display: block;
-      font-family: bebas neue;
-      font-size: large;
-      color: #bb382a;
-      border-color: #1B3561;
-      text-align: center;
+
+h1, h2, h3 {
+    font-family: var(--font-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+a {
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+/* ----------------------------------------------------------- */
+/* 3. NAVIGATION (Navbar)                                      */
+/* ----------------------------------------------------------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+    background-color: var(--club-white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* --- BOUTON DÉCONNEXION --- */
+.nav-links .btn-logout {
+    color: var(--club-red) !important; /* On force la couleur rouge de ton moonboard */
+    border: 2px solid var(--club-red);
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.nav-links .btn-logout:hover {
+    background-color: var(--club-red);
+    color: white !important;
+    box-shadow: 0 0 10px rgba(187, 56, 42, 0.4);
+}
+
+/* Ajustement pour le mobile */
+@media (max-width: 768px) {
+    .nav-links .btn-logout {
+        border: none;
+        padding: 10px 0;
+        text-align: center;
+    }
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: var(--club-dark);
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.nav-links a:hover {
+    color: var(--club-red);
+}
+
+.menu-burger {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ----------------------------------------------------------- */
+/* 4. PAGE D'ACCUEIL (Home-page)                               */
+/* ----------------------------------------------------------- */
+.home-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* En-tête de la page */
+.home-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-title {
+    font-size: 5.5rem;
+    color: var(--club-blue);
+    margin: 0;
+    line-height: 0.9;
+}
+
+.main-title .accent {
+    color: var(--club-red);
+}
+
+.divider {
+    height: 6px;
+    width: 100px;
+    background: var(--club-red);
+    margin: 15px auto;
+}
+
+.welcome-msg {
+    font-family: var(--font-secondary);
+    font-size: 1.3rem;
+    color: #555;
+    text-transform: uppercase;
+}
+
+/* Grille des menus */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+/* Cartes (Actualités, Planning, Boutique) */
+.menu-card {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
+    color: white;
+    overflow: hidden;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Effets de couleur par-dessus l'image (Moonboard) */
+.actu {
+    background-image: 
+        linear-gradient(to top, rgba(27, 53, 97, 0.95), rgba(27, 53, 97, 0.4)), 
+        url('/assets/img/news-bg.jpg'); /* Remplace par ton image */
+}
+
+.planning {
+    background-image: 
+        linear-gradient(to top, rgba(91, 48, 44, 0.95), rgba(91, 48, 44, 0.4)), 
+        url('/assets/img/gym-bg.jpg'); /* Remplace par ton image */
+}
+
+.boutique {
+    background-image: 
+        linear-gradient(to top, rgba(193, 100, 62, 0.95), rgba(193, 100, 62, 0.4)), 
+        url('/assets/img/shop-bg.jpg'); /* Remplace par ton image */
+}
+
+.menu-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.menu-card .content {
+    position: relative;
+    z-index: 2;
+}
+
+.menu-card h2 {
+    font-size: 3rem;
+    margin: 0;
+    line-height: 1;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+.menu-card span {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+/* Petit indicateur au survol */
+.menu-card::after {
+    content: 'ENTRER →';
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-family: var(--font-secondary);
+    font-weight: bold;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: 0.3s;
+    border: 1px solid white;
+    padding: 5px 10px;
+}
+
+.menu-card:hover::after {
+    opacity: 1;
+}
+
+/* ----------------------------------------------------------- */
+/* 5. RESPONSIVE (Mobiles)                                     */
+/* ----------------------------------------------------------- */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 3.5rem;
     }
 
-    /* Le conteneur principal de la navigation */
-    .navbar {
-      background-color: #D4B1A8;
-      color: black;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between; /* Pour séparer le logo et le menu */
-      align-items: center;
-    }
-
-    .connexion {
-        display: block;
-        font-size: 3rem;
-        font-weight: bold;
-        justify-self: end;
-    }
-    .logo {
-      font-size: 3rem;
-      font-weight: bold;
-    }
-
-    /* Le bouton du menu burger */
     .menu-burger {
-      display: block; /* Visible par défaut sur mobile */
-      font-size: 2rem;
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: black;
+        display: block;
     }
 
-    /* La liste des liens de navigation */
     .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      /* Menu masqué sur mobile et affiché sur desktop */
-      display: none; 
-     }
-
-    .nav-links li a {
-      color: black;
-      text-decoration: none;
-      display: block;
-      padding: 10px 15px;
-      text-align: center;
+        display: none; /* À gérer plus tard avec du JS pour l'ouverture */
     }
 
-    .nav-links li a:hover {
-      background-color: #575757;
+    .menu-grid {
+        grid-template-columns: 1fr; /* Une seule colonne sur mobile */
     }
-
-    .presentation{
-      background-color: #778496;
+    
+    .menu-card {
+        height: 250px;
     }
+}
+/* --- PAGE PROFIL --- */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-top: 30px;
+}
 
-    .actu{
-      background-color: #d4b1a8;
-    }
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-top: 4px solid var(--club-blue);
+}
 
-    .planning{
-      background-color: #d4b1a8;
-    }
-    .boutique{
-      background-color: #778496;
-    }
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--club-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--club-red);
+}
 
+.avatar-placeholder {
+    font-size: 3rem;
+    font-family: var(--font-main);
+    color: var(--club-red);
+}
 
-    /* ------------------------------------- */
-    /* 2. MEDIA QUERY POUR DESKTOP (768px et plus) */
-    /* ------------------------------------- */
+.details-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
 
-    /* Quand la largeur de l'écran est de 768px ou plus, les styles suivants s'appliquent */
-    @media (min-width: 768px) {
-      
-      .navbar {
-        justify-content: flex-start; /* Aligne tout au début */
-      }
+.details-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
 
-      /* 2.1 Masquer le bouton burger sur desktop */
-      .menu-burger {
-        display: none;
-      }
+/* --- BOUTONS --- */
+.btn-main {
+    background: var(--club-red);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-family: var(--font-main);
+    cursor: pointer;
+    width: 100%;
+}
 
-      /* 2.2 Afficher la liste des liens en ligne */
-      .nav-links {
-        display: flex; /* Utilise Flexbox pour aligner horizontalement les <li> */
-        margin-left: 20px; /* Petit espace entre le logo et le menu */
-      }
-      
-      /* 2.3 Les éléments de liste alignés côte à côte */
-      .nav-links li {
-        margin: 0 10px; /* Espace entre les liens */
-      }
-      
-      .nav-links li a {
-        padding: 5px 10px; /* Ajuste l'espacement pour l'alignement */
-      }
-    }
+.btn-outline {
+    background: transparent;
+    color: var(--club-blue);
+    border: 2px solid var(--club-blue);
+    padding: 10px;
+    font-family: var(--font-main);
+    width: 100%;
+    cursor: pointer;
+}
+
+/* --- MODALE --- */
+.lh-modal {
+    border: none;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+}
+
+.lh-modal::backdrop {
+    background: rgba(27, 53, 97, 0.8); /* Ton bleu LH en fond */
+}
