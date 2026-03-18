@@ -1,16 +1,20 @@
-<?php if (isset($error) || isset($success)): ?>
-    <div class="modal-overlay">
+<?php if (isset($success) || isset($error)): ?>
+    <div class="modal-overlay" id="modalFlash">
         <div class="modal-content">
             <?php if (isset($error)): ?>
-                <div style="color: #d9534f; font-weight: bold; margin-bottom: 15px;">Erreur</div>
-                <p><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+                <div style="color: #bb382a; font-weight: bold; font-family: 'Bebas Neue'; font-size: 2rem;">ERREUR</div>
+                <p><?= htmlspecialchars(isset($error)) ?></p>
+            <?php endif; ?>
 
-        <?php if (isset($success)): ?>
-            <div style="color: #5cb85c; font-weight: bold; margin-bottom: 15px;">Succès</div>
-            <p><?= htmlspecialchars($success) ?></p>
-        <?php endif; ?>
-        <button onclick="this.parentElement.parentElement.style.display='none'" style="margin-top: 15px;">OK</button>
+            <?php if (isset($success)): ?>
+                <div style="color: #1b3561; font-weight: bold; font-family: 'Bebas Neue'; font-size: 2rem;">SUCCÈS</div>
+                <p><?= htmlspecialchars(isset($success)) ?></p>
+            <?php endif; ?>
+
+            <button onclick="document.getElementById('modalFlash').style.display='none'" 
+                    style="margin-top: 15px; background: #121212; color: white; border: none; padding: 10px 20px; cursor: pointer; font-family: 'Bebas Neue';">
+                OK
+            </button>
         </div>
     </div>
 <?php endif; ?>

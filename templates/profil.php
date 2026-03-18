@@ -39,7 +39,7 @@
                 <?php else: ?>
                     <div class="status-badge inactive">DOSSIER INCOMPLET</div>
                     <p>Vous n'avez pas encore rempli votre fiche d'adhérent.</p>
-                    <a href="/adherer" class="btn-main">COMPLÉTER MON DOSSIER</a>
+                    <a href="/membership" class="btn-main">COMPLÉTER MON DOSSIER</a>
                 <?php endif; ?>
             </div>
         </section>

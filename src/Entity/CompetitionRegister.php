@@ -2,20 +2,20 @@
 namespace App\Entity;
 
 class CompetitionRegister {
-    private int $Id_member;
+    private int $id_member;
     private ?Members $members;
     private int $Id_competition;
     private ?Competitions $competitions;
 
-public function __construct(int $Id_member, int $Id_competition) {
-        $this->Id_member=$Id_member; 
+public function __construct(int $id_member, int $Id_competition) {
+        $this->id_member=$id_member; 
         $this->Id_competition=$Id_competition;
 }
 
-    public function getIdMember(): int {return $this->Id_member;}
+    public function getIdMember(): int {return $this->id_member;}
 
-    public function setIdMember(int $Id_member): self {
-        $this->Id_member = $Id_member;
+    public function setIdMember(int $id_member): self {
+        $this->id_member = $id_member;
         return $this;
     }
 

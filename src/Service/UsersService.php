@@ -96,9 +96,9 @@ class UsersService {
     }
 
     public function deleteUser(int $usersId): void {
-        $success = $this->usersRepository->delete($usersId);
+        $msgSuccess = $this->usersRepository->delete($usersId);
         
-        if (!$success) {
+        if (!$msgSuccess) {
             throw new \Exception("Cette utilisateur ne peut pas être supprimée");
         }
     }

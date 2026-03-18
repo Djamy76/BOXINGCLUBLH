@@ -1,6 +1,6 @@
 /* ------------------------------------- */
-    /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
-    /* ------------------------------------- */
+/* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
+/* ------------------------------------- */
 
 @import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 
@@ -80,30 +80,62 @@ button {
 }
 
 button:hover { background-color: #962d22; transform: scale(1.02); }
-
-.error-msg {
-    background: blue;
-    color: #990000;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
+/* --- MODALE DE NOTIFICATION --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Fond noir transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* Doit être au-dessus de tout */
 }
 
-a { color: var(--white); text-decoration: underline; font-size: 0.8rem; }
-
-.dashboard-menu {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 4px;
-    border-left: 4px solid var(--red-boxing);
-}
-
-.success-msg {
-    background: blue;
-    color: #155724;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 1rem;
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
     text-align: center;
+    min-width: 300px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.modal-header.error { color: #bb382a; }   /* Ton rouge */
+.modal-header.success { color: #1b3561; } /* Ton bleu */
+
+.btn-modal {
+    margin-top: 20px;
+    background: #121212;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-modal:hover {
+    background: #bb382a;
+}
+
+/* À ajouter à la fin de ton fichier */
+@media (max-width: 900px) {
+    .login-grid-wrapper {
+        flex-direction: column; /* On empile */
+        gap: 30px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 4rem; /* Réduction de la taille sur mobile */
+        text-align: center;
+    }
 }

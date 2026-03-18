@@ -3,17 +3,20 @@
 namespace App\Controller;
 
 use App\Service\AuthService;
+use App\Service\MembersService;
 use App\Service\UsersService;
 
 class AuthController extends AbstractController{
     private UsersService $usersService;
     private AuthService $authService;
+    private MembersService $membersService;
     
 
     //Injection des dépendances (outils déjà créés pour gérer la base de données)
-    public function __construct(UsersService $usersService, AuthService $authService) {
+    public function __construct(UsersService $usersService, AuthService $authService, MembersService $membersService) {
         $this->usersService = $usersService;
         $this->authService = $authService;
+        $this->membersService = $membersService;
     }
    
 
@@ -81,7 +84,7 @@ class AuthController extends AbstractController{
  //Déconnection de l'utilisateur
     public function logout(): void {
         $this->authService->logout();
-        $_SESSION['flash_success'] = "Vous êtes déconnecté.";
+        $_SESSION['flash_success']  = "Vous êtes déconnecté.";
         header('Location: /login');
         exit;
     }
@@ -89,7 +92,7 @@ class AuthController extends AbstractController{
     //Changement de mot de passe par un utilisateur connecté
     public function updatePassword(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /profile');
+            header('Location: /profil');
             exit;
         }
 
@@ -98,9 +101,9 @@ class AuthController extends AbstractController{
         $userId = $_SESSION['id_user'];
 
         if ($this->usersService->updatePassword($userId, $old, $new)) {
-            header('Location: /profile?success=password_updated');
+            header('Location: /profil?success=password_updated');
         } else {
-            header('Location: /profile?error=invalid_password');
+            header('Location: /profil?error=invalid_password');
         }
         exit;
     }

@@ -1,21 +1,23 @@
 <?php
 namespace App\Service;
 
-use App\Repository\UsersRepository;
+use App\Repository\{UsersRepository, MembersRepository};
 use App\Entity\Users;
 use \Exception;
 use \DateTime;
 
 class AuthService {
     private UsersRepository $usersRepository;
+    private MembersRepository $membersRepository;
     protected array $accessControl = [];
     // Définition des niveaux d'accès
     public const ROLE_ADMIN = 0;
     public const ROLE_USER = 1;
     public const ROLE_PUBLIC = -1;
 
-    public function __construct(UsersRepository $usersRepository) {
+    public function __construct(UsersRepository $usersRepository, MembersRepository $membersRepository) {
         $this->usersRepository = $usersRepository;
+        $this->membersRepository = $membersRepository;
         // if (session_status() === PHP_SESSION_NONE) {
         //     session_start();
         // }
@@ -66,16 +68,11 @@ class AuthService {
     
 
     public function logout(): void { 
-// Nettoyage complet de la session
-        $_SESSION = [];
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-        session_destroy();
+        // On vide les données de connexion mais on garde la session ouverte 
+        // pour transporter le message flash
+    unset($_SESSION['id_user']);
+    unset($_SESSION['email']);
+    unset($_SESSION['role']);
     }
 
     public function isAuthenticated(): bool {

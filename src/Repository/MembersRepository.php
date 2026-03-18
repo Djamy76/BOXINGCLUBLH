@@ -14,8 +14,8 @@ class MembersRepository {
 
     // CRUD - CREATE
     public function create(members $members): bool {
-        $stmt=$this->pdo->prepare("INSERT INTO members (firstname, lastname, birthdate, street_number, street, postcode, city, email, phone_number, profil_picture, medical_certificate) 
-            VALUES (:firstname, :lastname, :birthdate, :street_number, :street, :postcode, :city, :email, :phone_number, :profil_picture, :medical_certificate);");
+        $stmt=$this->pdo->prepare("INSERT INTO members (firstname, lastname, birthdate, street_number, street, postcode, city, email, phone_number, profil_picture, medical_certificate, id_user) 
+            VALUES (:firstname, :lastname, :birthdate, :street_number, :street, :postcode, :city, :email, :phone_number, :profil_picture, :medical_certificate,:id_user);");
         $stmt->bindValue(":firstname",$members->getFirstname());
         $stmt->bindValue(":lastname",$members->getLastname());
         $stmt->bindValue(":birthdate",$members->getBirthdate()->format('Y-m-d'));
@@ -27,12 +27,13 @@ class MembersRepository {
         $stmt->bindValue(":phone_number",$members->getPhoneNumber());
         $stmt->bindValue(":profil_picture",$members->getProfilPicture());
         $stmt->bindValue(":medical_certificate",$members->getMedicalCertificate());
+        $stmt->bindValue(":id_user", $members->getIdUser(), PDO::PARAM_INT);
         $result = $stmt->execute();
         return $result;
     }
      // CRUD - READ
     public function findById(int $id): ?Members {
-        $stmt = $this->pdo->prepare("SELECT * from members WHERE Id_member=:id");
+        $stmt = $this->pdo->prepare("SELECT * from members WHERE id_member=:id");
         $stmt->bindValue(":id", $id);
         $stmt->execute();
         $row=$stmt->fetch();
@@ -50,7 +51,7 @@ class MembersRepository {
     }
     // CRUD - UPDATE
     public function update(Members $members): bool {
-        $stmt = $this->pdo->prepare("UPDATE members SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, street_number=:street_number, street=:street, postcode=:postcode, city=:city, email=:email, phone_number=:phone_number, profil_picture=:profil_picture, medical_certificate=:medical_certificate WHERE Id_member=:id");
+        $stmt = $this->pdo->prepare("UPDATE members SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, street_number=:street_number, street=:street, postcode=:postcode, city=:city, email=:email, phone_number=:phone_number, profil_picture=:profil_picture, medical_certificate=:medical_certificate, id_user=:id_user WHERE id_member=:id");
         $stmt->bindValue(":firstname",$members->getFirstname());
         $stmt->bindValue(":lastname",$members->getLastname());
         $stmt->bindValue(":birthdate",$members->getBirthdate()->format('Y-m-d'));
@@ -62,12 +63,13 @@ class MembersRepository {
         $stmt->bindValue(":phone_number",$members->getPhoneNumber());
         $stmt->bindValue(":profil_picture",$members->getProfilPicture());
         $stmt->bindValue(":medical_certificate",$members->getMedicalCertificate());
+        $stmt->bindValue(":id_user", $members->getIdUser(), PDO::PARAM_INT);        
         $result = $stmt->execute();
         return $result;
     }
     // CRUD - DELETE
     public function delete(int $id): bool {
-        $stmt = $this->pdo->prepare("DELETE from members WHERE Id_member=:id");
+        $stmt = $this->pdo->prepare("DELETE from members WHERE id_member=:id");
         $stmt->bindValue(":id", $id);
         $result=$stmt->execute();
         return $result;
@@ -104,7 +106,7 @@ class MembersRepository {
             $row['profil_picture'], 
             $row['medical_certificate'], 
             (int)$row['id_user'],
-            (int)$row['Id_member']
+            (int)$row['id_member']
         );
     }
 
@@ -112,15 +114,6 @@ class MembersRepository {
         return (int)$this->pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
     }
 
-    public function countActiveMembers(int $minutes = 15): int {
-        $stmt = $this->pdo->prepare("
-            SELECT COUNT(*) FROM members 
-            WHERE last_action > DATE_SUB(NOW(), INTERVAL :mins MINUTE)
-        ");
-        $stmt->bindValue(':mins', $minutes, PDO::PARAM_INT);
-        $stmt->execute();
-        return (int)$stmt->fetchColumn();
-    }
-
+    
 }
 ?>

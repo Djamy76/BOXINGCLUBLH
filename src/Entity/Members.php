@@ -4,7 +4,7 @@ namespace App\Entity;
 use DateTime;
 
 class Members {
-    private ?int $Id_member;
+    private ?int $id_member;
     private string $firstname;
     private string $lastname;
     private DateTime $birthdate;
@@ -32,8 +32,8 @@ class Members {
     $profil_picture,
     $medical_certificate,
     int $id_user,  
-    ?int $Id_member=null) {
-        $this->Id_member=$Id_member;
+    ?int $id_member=null) {
+        $this->id_member=$id_member;
         $this->firstname=$firstname;
         $this->lastname=$lastname;
         $this->birthdate=$birthdate;
@@ -48,7 +48,7 @@ class Members {
         $this->id_user=$id_user;                             
     }
 
-    public function getIdMember(): ?int {return $this->Id_member;}
+    public function getIdMember(): ?int {return $this->id_member;}
      
     public function getFirstname(): string {return $this->firstname;}
 

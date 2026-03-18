@@ -22,9 +22,7 @@ class HomeController extends AbstractController{
         $this->render('home', [
             'title' => 'Tableau de bord - Boxing Club LH',
             'userEmail' => $_SESSION['email'] ?? 'Utilisateur'
-    //    $this->render('home', [
-    //     'user' => $this->authService->getUserEmail()
-    ]);
+      ]);
     }
 }
 ?>

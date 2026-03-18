@@ -10,7 +10,7 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-            <img src="/assets/ico/connexion.png" alt="connexion" height=50rem>
+            <a href="/profil"><img src="/assets/ico/connexion.png" alt="connexion" height=50rem></a>
             </div>
             <div class="logo">
             <img src="/assets/img/LOGO.jpg" alt="logo" height=50rem>

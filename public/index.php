@@ -7,24 +7,24 @@ use App\Controller\{HomeController,AuthController,AbstractController,ErrorContro
 use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService};
 use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepository, UsersRepository};
 
-    // //Nettoyage de l'URL
-    // $request = trim($_SERVER['REQUEST_URI'], '/');
-    // $params = explode('/', $request); 
-    // //Identification du contrôleur et de la méthode
-    // $controller=array_shift($params); 
-    // $method=array_shift($params); 
-    // if ($controller=='') {$controller='Home';}
-    // if ($method=='') {$method='index';}
-    // $controllerName = !empty($params[0]) ? ucfirst($params[0]) : 'Home';
-    // $method = !empty($params[1]) ? $params[1] : 'index';
-    // //Définition de la variable
-    // $controllerClass = 'App\\Controller\\' . $controller . 'Controller';
-    // //Vérification de l'instance
-    // if (!class_exists($controllerClass)) {
-    //     $params['errorCode']=404;
-    // }
+    //Nettoyage de l'URL
+    $request = trim($_SERVER['REQUEST_URI'], '/');
+    $params = explode('/', $request); 
+    //Identification du contrôleur et de la méthode
+    $controller=array_shift($params); 
+    $method=array_shift($params); 
+    if ($controller=='') {$controller='Home';}
+    if ($method=='') {$method='index';}
+    $controllerName = !empty($params[0]) ? ucfirst($params[0]) : 'Home';
+    $method = !empty($params[1]) ? $params[1] : 'index';
+    //Définition de la variable
+    $controllerClass = 'App\\Controller\\' . $controller . 'Controller';
+    //Vérification de l'instance
+    if (!class_exists($controllerClass)) {
+        $params['errorCode']=404;
+    }
 
-    // on se connecte à PDO
+    //on se connecte à PDO
     try {
         $envPath = __DIR__ . '/../.env';
         // si pas de fichier .env on leve une exception
@@ -48,9 +48,9 @@ $authService = new AuthService($usersRepository, $membersRepository);
 
 
 // On instancie les contrôleurs nécessaires
-$authController = new AuthController($usersService, $authService);
-$homeController = new HomeController($usersService, $authService);
-$profileController = new ProfilController($usersService, $authService, $membersService);
+$authController = new AuthController($usersService, $authService,$membersService);
+$homeController = new HomeController($usersService, $authService,$membersService);
+$profilController = new ProfilController($usersService, $authService, $membersService);
 
 // 1. Nettoyer l'URI pour enlever le dossier racine si nécessaire
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -90,20 +90,25 @@ switch ($uri) {
         $authController->logout();
         break;
 
-    case '/profile':
-        $profileController->index();
+    case '/profil':
+        $profilController->index();
         break;
 
-    case '/profile/update-password':
+    case '/profil/update-password':
         // Seul le POST est autorisé ici par sécurité
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $profileController->updatePassword();
+            $profilController->updatePassword();
         } else {
-            header('Location: /profile');
+            header('Location: /profil');
         }
         break;
+
+    case '/membership':
+        $profilController->showMembershipForm();
+        break;    
+
     default:
-        // TO DO gérer une 404 ici
+        // TO DO gérer une e404 ici
         echo "Page non trouvée";
         break;
 }

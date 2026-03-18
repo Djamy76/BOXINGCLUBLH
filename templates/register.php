@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
 <head>
-    <meta charset="UTF-8">
     <link rel="stylesheet" href="assets/css/styleconnexion.css">
     <title>Inscription Boxing Club LH</title>
 </head>
-<body>
     <div class="auth-container">
         <h1>REJOINS NOUS</h1>
         
         <form action="/register" method="POST">
            <div class="form-group">
-                <label>lastname</label>
+                <label>Nom</label>
                 <input type="text" name="lastname" placeholder="Nom" required>
             </div>
            <div class="form-group">
-                <label>firstname</label>
+                <label>Prénom</label>
                 <input type="text" name="firstname" placeholder="Prénom" required>
             </div>
             <div class="form-group">
@@ -40,5 +36,3 @@
             </div>
         </form>
     </div>
-</body>
-</html>

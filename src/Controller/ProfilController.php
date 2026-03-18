@@ -36,6 +36,47 @@ class ProfilController extends AbstractController {
             'isLoggedIn' => true
         ]);
     }
+    
+    // Affiche le formulaire d'adhésion
+    public function showMembershipForm(): void {
+        $this->render('membership', [
+        'isLoggedIn' => $this->authService->isAuthenticated()
+    ]);
+    }
+
+    // Traite la soumission de l'adhésion par le formulaire
+    public function membershipregister(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->showMembershipForm();
+        return;
+    }
+    // Récupération des données
+        $data = $_POST;
+        $files = $_FILES;
+
+    // INJECTION DE L'ID UTILISATEUR (Sécurité)
+    // On prend l'ID de la session pour être sûr que l'adhérent est bien l'utilisateur connecté
+        $data['id_user'] = $_SESSION['id_user'];   
+    // 2. On passe tout le tableau $_POST au service avec capture des exceptions
+        try {
+            $success = $this->membersService->createMember($data, $files);
+
+            if (!$success) {
+                throw new \Exception("L'enregistrement en base de données a échoué.");
+    }
+        // Si tout s'est bien passé
+        $_SESSION['flash_success'] = "Félicitations ! Vous faites parti de la Team !";
+        header('Location: /home');
+        exit;
+
+    } catch (\Exception $e) {
+        // C'est ici que tu "attrapes" l'erreur du mot de passe trop court
+        // On attrape l'exception lancée par validUser ou le Repository
+        $_SESSION['flash_error'] = $e->getMessage();
+        header('Location: /membership');
+        exit;
+    }
+}
 
     public function updatePassword(): void {
         if (!$this->authService->isAuthenticated()) {

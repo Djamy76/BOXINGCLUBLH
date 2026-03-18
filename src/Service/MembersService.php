@@ -16,19 +16,12 @@ class MembersService {
         $this->membersRepository=$repository;
     }
 
-
-    // //fonction pour récupérer toutes les membres avec la fonction findAll de membersRepository
-    // public function getmembers() : string {
-    //     $email = (int)$this->getParam('email');
-    //     $this-> membersRepository->findByEmail('email');
-    // }
-   
     public function createMember(array $data, array $files): bool {
         
         // Vérifier si l'email existe déjà via le Repository
-        $existingMember = $this->membersRepository->findById($data['Id_member']);
+        $existingMember = $this->membersRepository->findByUserId($data['id_user']);
         if ($existingMember) {
-            throw new \Exception("Un compte existe déjà avec cette adresse");
+            throw new \Exception("Vous avez déjà un dossier d'adhésion en cours.");
         }
 
         // Préparation des fichiers binaires (BLOB)
@@ -41,7 +34,7 @@ class MembersService {
             : null;
 
         if (!$medicalCert) {
-            throw new \Exception("Le certificat médical est obligatoire pour l'inscription.");
+            throw new \Exception("Le certificat médical est obligatoire pour l'adhésion.");
         }
 
         // Création de l'Entité members
@@ -77,9 +70,9 @@ class MembersService {
     }
 
     public function cancelmembers(int $membersId): void {
-        $success = $this->membersRepository->delete($membersId);
+        $msgSuccess = $this->membersRepository->delete($membersId);
         
-        if (!$success) {
+        if (!$msgSuccess) {
             throw new \Exception("Cette adhérant ne peut pas être supprimée");
         }
     }
