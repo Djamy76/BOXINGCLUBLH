@@ -314,6 +314,20 @@ a {
     border-bottom: 1px solid #eee;
     font-size: 0.9rem;
 }
+.reservation-card {
+    background: #222;
+    border-left: 5px solid #ff4d4d;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+.btn-cancel {
+    color: #ff4d4d;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 10px;
+}
 
 /* --- BOUTONS --- */
 .btn-main {

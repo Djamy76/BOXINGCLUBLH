@@ -2,6 +2,7 @@
 namespace App\Repository;
 
 use App\Entity\Members;
+use App\Entity\Users;
 use \PDO;
 use \DateTime;
 
@@ -43,7 +44,7 @@ class MembersRepository {
     }
     function findAll(): array {
         $stmt = $this->pdo->query("SELECT * from members");
-        $users=[];
+        $members=[];
         while ($row=$stmt->fetch()) {
             $members[] = new Members($row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['street_number'], $row['street'], $row['postcode'], $row['city'], $row['email'], $row['phone_number'], $row['profil_picture'], $row['medical_certificate'], $row['id_user']);
         }    
@@ -85,9 +86,9 @@ class MembersRepository {
     }
 
     // Recupération des infos de la table Members à partir de l'Id de l'utilisteur connecté
-    public function findByUserId(int $userId): ?Members {
+    public function findByUserId(int $id_user): ?Members {
         $stmt = $this->pdo->prepare("SELECT * FROM members WHERE id_user = :id_user");
-        $stmt->bindValue(":id_user", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":id_user", $id_user, PDO::PARAM_INT);
         $stmt->execute();
         $row = $stmt->fetch();
 
@@ -109,11 +110,42 @@ class MembersRepository {
             (int)$row['id_member']
         );
     }
+    //JOINTURE AVEC LA TABLE USERS
+    public function findAllWithUsers(): array {
+        $sql = "SELECT m*  
+                FROM members m 
+                inner JOIN user u ON m.id_user = u.id_user 
+                ORDER BY m.id";
+        $stmt = $this->pdo->query($sql);
+        $rows = $stmt->fetchAll();
+
+        $members = [];
+        foreach ($rows as $row) {
+            $members = new Members(
+            $row['firstname'], 
+            $row['lastname'], 
+            new \DateTime($row['birthdate']), 
+            $row['street_number'], 
+            $row['street'], 
+            (int)$row['postcode'], 
+            $row['city'], 
+            $row['email'], 
+            $row['phone_number'], 
+            $row['profil_picture'], 
+            $row['medical_certificate'], 
+            (int)$row['id_user'],
+            (int)$row['id_member']
+            );
+            $users = new users((int)$row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], (int)$row['id_user']);
+            $members->setUsers($users);
+            $members[] = $members;
+        }
+
+        return $members;
+    }
 
     public function countTotalMembers(): int {
         return (int)$this->pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
     }
-
-    
 }
 ?>

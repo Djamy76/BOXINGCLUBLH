@@ -6,8 +6,8 @@ abstract class AbstractController {
     protected function render(string $template, array $data = []): void {
         // Gestion des erreurs
         if (isset($_SESSION['flash_error'])) {
-        $data['error'] = $_SESSION['flash_error'];
-        unset($_SESSION['flash_error']); // On efface pour qu'il ne reste pas
+            $data['error'] = $_SESSION['flash_error'];
+            unset($_SESSION['flash_error']); // On efface pour qu'il ne reste pas
         }
         // Gestion des succès
         if (isset($_SESSION['flash_success'])) {

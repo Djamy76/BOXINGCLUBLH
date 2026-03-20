@@ -10,14 +10,14 @@ class Members {
     private DateTime $birthdate;
     private string $street_number;
     private string $street;
-    private int $postcode;
+    private string $postcode;
     private string $city;
     private string $email;
     private string $phone_number;
     private $profil_picture;
     private $medical_certificate;
     private int $id_user;
-    private ?users $users;   
+    private ?Users $users = null;   
 
     public function __construct(
     string $firstname,
@@ -25,14 +25,14 @@ class Members {
     DateTime $birthdate,
     string $street_number,
     string $street,
-    int $postcode,
+    string $postcode,
     string $city,
     string $email,
     string $phone_number,
     $profil_picture,
     $medical_certificate,
     int $id_user,  
-    ?int $id_member=null) {
+    ?int $id_member = null) {
         $this->id_member=$id_member;
         $this->firstname=$firstname;
         $this->lastname=$lastname;
@@ -85,9 +85,9 @@ class Members {
         return $this;
     }
 
-    public function getPostcode(): int {return $this->postcode;}
+    public function getPostcode(): string {return $this->postcode;}
 
-    public function setPostcode(int $postcode): self {
+    public function setPostcode(string $postcode): self {
         $this->postcode = $postcode;
         return $this;
     }
@@ -137,14 +137,27 @@ class Members {
         return 'data:image/jpeg;base64,' .  base64_encode($this->medical_certificate);
     }
 
-    public function getIdUser(): ?int
+    public function getUsers(): ?Users
+    {
+        return $this->users;
+    }
+
+    public function setUsers(?Users $users): self
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    public function getIdUser(): int
     {
         return $this->id_user;
     }
 
-    public function getUsers(): ?users
+    public function setIdUser(int $id_user): self
     {
-        return $this->users;
+        $this->id_user = $id_user;
+
+        return $this;
     }
 }
 ?>

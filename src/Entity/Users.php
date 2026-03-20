@@ -11,7 +11,8 @@ class Users {
     private DateTime $birthdate;
     private string $email;
     private string $password;
-
+    private ?int $id_try_class = null;
+    private ?TryClasses $try_classes = null;   
 
     public function __construct(
     int $role,
@@ -20,15 +21,16 @@ class Users {
     DateTime $birthdate,
     string $email,
     string $password,
- 
-    ?int $id_user=null) {
+    ?int $id_try_class = null,
+    ?int $id_user = null) {
         $this->id_user=$id_user;
         $this->role=$role;
         $this->firstname=$firstname;
         $this->lastname=$lastname;
         $this->birthdate=$birthdate;
         $this->email=$email;
-        $this->password=$password;               
+        $this->password=$password;
+        $this->id_try_class=$id_try_class;
     }
 
     public function getIdUser(): ?int {return $this->id_user;}
@@ -72,6 +74,30 @@ class Users {
 
     public function setPassword(string $password): self {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getIdTryClass(): ?int
+    {
+        return $this->id_try_class;
+    }
+
+    public function setIdTryClass(?int $id_try_class): self
+    {
+        $this->id_try_class = $id_try_class;
+
+        return $this;
+    }
+
+    public function getTryClasses(): ?TryClasses
+    {
+        return $this->try_classes;
+    }
+
+    public function setTryClasses(?TryClasses $try_classes): self
+    {
+        $this->try_classes = $try_classes;
+
         return $this;
     }
 }

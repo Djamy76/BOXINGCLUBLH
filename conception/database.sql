@@ -7,7 +7,7 @@ CREATE USER IF NOT EXISTS 'boxing_admin'@'localhost' IDENTIFIED BY 'boxingclublh
 GRANT ALL PRIVILEGES ON boxingclublh.* TO 'boxing_admin'@'localhost';
 
 CREATE TABLE users(
-   Id_user INT AUTO_INCREMENT,
+   id_user INT AUTO_INCREMENT,
    role INT,
    firstname VARCHAR(50) ,
    birthdate VARCHAR(50) ,
@@ -15,8 +15,8 @@ CREATE TABLE users(
    password VARCHAR(255) ,
    lastname VARCHAR(50) ,
    Id_try_class INT,
-   PRIMARY KEY(Id_user),
-   FOREIGN KEY(Id_try_class) REFERENCES try_classes(Id_try_class)
+   PRIMARY KEY(id_user),
+   FOREIGN KEY(id_try_class) REFERENCES try_classes(id_try_class)
 )ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS members(
@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS members(
    birthdate DATE,
    street_number VARCHAR(5),
    street VARCHAR(150),
-   postcode INT,
+   postcode VARCHAR(50),
    city VARCHAR(50),
    email VARCHAR(50),
    phone_number VARCHAR(15),
    profil_picture MEDIUMBLOB,
    medical_certificate MEDIUMBLOB,
-   Id_user INT NOT NULL,
+   id_user INT NOT NULL,
    PRIMARY KEY(id_member),
    UNIQUE(Id_user),
    FOREIGN KEY(Id_user) REFERENCES users(Id_user)
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS shops(
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS images(
-   Id_image INT AUTO_INCREMENT,
+   id_image INT AUTO_INCREMENT,
    product_image MEDIUMBLOB,
    id_shop INT NOT NULL,
    PRIMARY KEY(Id_image),
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS images(
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS legal_representatives(
-   Id_legal_representative INT AUTO_INCREMENT,
+   id_legal_representative INT AUTO_INCREMENT,
    name_legal_repres VARCHAR(50),
    phone_legal_repres VARCHAR(15),
    id_member INT NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS legal_representatives(
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS orders(
-   Id_order INT AUTO_INCREMENT,
+   id_order INT AUTO_INCREMENT,
    quantity SMALLINT,
    total_price INT,
    status VARCHAR(50),
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS orders(
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS competitions(
-   Id_competition INT AUTO_INCREMENT,
+   id_competition INT AUTO_INCREMENT,
    competition VARCHAR(50),
    competition_category VARCHAR(50),
    sexe VARCHAR(50),
@@ -92,8 +92,8 @@ CREATE TABLE IF NOT EXISTS competitions(
    PRIMARY KEY(Id_competition)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS Try_classes(
-   Id_Try_class INT AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS try_classes(
+   id_try_class INT AUTO_INCREMENT,
    class VARCHAR(50),
    class_category VARCHAR(50),
    date_ DATE,

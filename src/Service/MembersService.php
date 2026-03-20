@@ -12,14 +12,14 @@ use \DateTime;
 class MembersService {
     private MembersRepository $membersRepository;
 
-    public function __construct(MembersRepository $repository) {
-        $this->membersRepository=$repository;
+    public function __construct(MembersRepository $membersrepository) {
+        $this->membersRepository=$membersrepository;
     }
 
-    public function createMember(array $data, array $files): bool {
-        
-        // Vérifier si l'email existe déjà via le Repository
-        $existingMember = $this->membersRepository->findByUserId($data['id_user']);
+    public function createMember(array $data, array $files, int $id_user): bool {
+
+    // Vérifier si l'email existe déjà via le Repository
+        $existingMember = $this->membersRepository->findByUserId($id_user);
         if ($existingMember) {
             throw new \Exception("Vous avez déjà un dossier d'adhésion en cours.");
         }
@@ -39,34 +39,38 @@ class MembersService {
 
         // Création de l'Entité members
         // On utilise les données du formulaire 
-        $member = new members(
+        $newMember = new Members(
             $data['firstname'],
             $data['lastname'],
             new DateTime($data['birthdate']),
             $data['street_number'],
             $data['street'],
-            (int)$data['postcode'],
+            $data['postcode'],
             $data['city'],
             $data['email'],
             $data['phone_number'],
             $profilPicture,
             $medicalCert,
-            (int)$data['id_user']
+            $id_user
         );
 
         // On délègue l'insertion SQL au Repository
-        return $this->membersRepository->create($member);
+        return $this->membersRepository->create($newMember);
     }
 
     public function getmemberStatistics(): array {
         return [
-            'total' => $this->membersRepository->countTotalmembers(),
-            'active' => $this->membersRepository->countActivemembers(15)
+            'total' => $this->membersRepository->countTotalMembers(),
+            // 'active' => $this->membersRepository->countActivemembers(15)
         ];
     }
 
-    public function getMemberByUserId(int $userId): ?members {
-        return $this->membersRepository->findByUserId($userId);
+    public function getMemberByUserId(int $id_user): ?members {
+        return $this->membersRepository->findByUserId($id_user);
+    }
+
+    public function getAllMembers(): array {
+        return $this->membersRepository->findAllWithUsers();
     }
 
     public function cancelmembers(int $membersId): void {

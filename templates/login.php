@@ -8,7 +8,6 @@
             <div class="auth-subtitle">La force, le respect, la team.</div>
         </div>
         <div class="auth-right">
-            <div class="form-card">    
                 <form action="/login" method="POST">
                     <div class="form-group">
                         <label for="email">Identifiant</label>
@@ -23,7 +22,6 @@
                     </div>
                 </form>
                 <p class="auth-footer">Pas encore inscrit ?<a href="/register"> Rejoins la team</a></p>
-            </div>
         </div>
     </div>
 </main>

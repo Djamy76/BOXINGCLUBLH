@@ -13,18 +13,18 @@
             <a href="/profil"><img src="/assets/ico/connexion.png" alt="connexion" height=50rem></a>
             </div>
             <div class="logo">
-            <img src="/assets/img/LOGO.jpg" alt="logo" height=50rem>
+            <a href="/"><img src="/assets/img/LOGO.jpg" alt="logo" height=50rem></a>
             </div>
 
             <button class="menu-burger" aria-label="Ouvrir le menu">☰</button>
     
             <ul class="nav-links">
                 <li><a href="/">Accueil</a></li>
-                 <li><a href="/adhérer">Adhérer</a></li>
+                 <li><a href="/membership">Adhérer</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="tchat">Tchat</a></li>
                 <li><a href="a-propos">A propos</a></li>
-                <li><a href="seance_essai">Séance d'Essai</a></li>
+                <li><a href="/tryClasses">Séance d'Essai</a></li>
                 <?php if (isset($_SESSION['id_user'])): ?>
                     <li><a href="/logout" class="btn-logout">DÉCONNEXION</a></li>
                 <?php endif; ?>

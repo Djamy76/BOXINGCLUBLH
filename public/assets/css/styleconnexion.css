@@ -21,7 +21,7 @@
 body {
     background-image: url(images/image2.jpg);
     /*background-color: var(--black);*/
-    color: var(--white);
+    color: var(--black);
     font-family: 'Oswald', sans-serif;
     display: flex;
     justify-content: center;

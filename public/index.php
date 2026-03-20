@@ -3,9 +3,9 @@ session_start();
     
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController};
-use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService};
-use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepository, UsersRepository};
+use App\Controller\{HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController,TryClassesController};
+use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService, TryClassesService};
+use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepository, UsersRepository, TryClassesRepository};
 
     //Nettoyage de l'URL
     $request = trim($_SERVER['REQUEST_URI'], '/');
@@ -42,15 +42,18 @@ use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepositor
 // 2. Injection de dépendances
 $usersRepository = new UsersRepository($pdo);
 $membersRepository = new MembersRepository($pdo);
+$tryClassesRepository = new TryClassesRepository($pdo);
 $usersService = new UsersService($usersRepository);
 $membersService = new MembersService($membersRepository);
-$authService = new AuthService($usersRepository, $membersRepository);
+$tryClassesService = new TryClassesService($tryClassesRepository);
+$authService = new AuthService($usersRepository, $membersRepository, $tryClassesRepository);
 
 
 // On instancie les contrôleurs nécessaires
-$authController = new AuthController($usersService, $authService,$membersService);
+$authController = new AuthController($usersService, $authService,$membersService,$tryClassesService);
 $homeController = new HomeController($usersService, $authService,$membersService);
-$profilController = new ProfilController($usersService, $authService, $membersService);
+$profilController = new ProfilController($usersService, $authService, $membersService,$tryClassesService);
+$tryClassesController = new TryClassesController($tryClassesService, $usersService, $authService);
 
 // 1. Nettoyer l'URI pour enlever le dossier racine si nécessaire
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -104,9 +107,20 @@ switch ($uri) {
         break;
 
     case '/membership':
-        $profilController->showMembershipForm();
-        break;    
-
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $profilController->membershipregister();
+        } else {
+            $profilController->showMembershipForm();
+        }
+        break; 
+    case '/tryClasses':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tryClassesController->book();
+        } else {
+            $tryClassesController->ShowBookingForm();
+        //header('Location: /tryClasses');
+        }
+        break;     
     default:
         // TO DO gérer une e404 ici
         echo "Page non trouvée";

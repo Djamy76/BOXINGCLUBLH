@@ -3,12 +3,12 @@
         <div class="modal-content">
             <?php if (isset($error)): ?>
                 <div style="color: #bb382a; font-weight: bold; font-family: 'Bebas Neue'; font-size: 2rem;">ERREUR</div>
-                <p><?= htmlspecialchars(isset($error)) ?></p>
+                <p><?= htmlspecialchars($error) ?></p>
             <?php endif; ?>
 
             <?php if (isset($success)): ?>
                 <div style="color: #1b3561; font-weight: bold; font-family: 'Bebas Neue'; font-size: 2rem;">SUCCÈS</div>
-                <p><?= htmlspecialchars(isset($success)) ?></p>
+                <p><?= htmlspecialchars($success) ?></p>
             <?php endif; ?>
 
             <button onclick="document.getElementById('modalFlash').style.display='none'" 

@@ -33,7 +33,7 @@ body {
     flex-direction: column;
     /* Utilisation de la police secondaire pour le corps */
     font-family: var(--font-secondary); 
-    color: var(--club-white);
+    color: var(--black);
 }
 
 .auth-page-container {

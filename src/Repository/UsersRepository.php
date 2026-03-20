@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository;
 
+use App\Entity\TryClasses;
 use App\Entity\Users;
 use \PDO;
 use \DateTime;
@@ -14,16 +15,18 @@ class UsersRepository {
 
     // CRUD - CREATE
     public function create(users $users): bool {
-        $stmt=$this->pdo->prepare("INSERT INTO users (role, firstname, lastname, birthdate, email, password) 
-            VALUES (:role, :firstname, :lastname, :birthdate, :email, :password);");
+        $stmt=$this->pdo->prepare("INSERT INTO users (role, firstname, lastname, birthdate, email, password, id_try_class) 
+            VALUES (:role, :firstname, :lastname, :birthdate, :email, :password, :id_try_class);");
         $stmt->bindValue(":role",$users->getRole(),PDO::PARAM_INT);
         $stmt->bindValue(":firstname",$users->getFirstname());
         $stmt->bindValue(":lastname",$users->getLastname());
         $stmt->bindValue(":birthdate",$users->getBirthdate()->format('Y-m-d'));
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
-        $result = $stmt->execute();
-        return $result;
+        $id_class = $users->getIdTryClass();
+    $stmt->bindValue(":id_try_class", $id_class, $id_class === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+    
+    return $stmt->execute();
     }
      // CRUD - READ
     public function findById(int $id): ?Users {
@@ -32,29 +35,32 @@ class UsersRepository {
         $stmt->execute();
         $row=$stmt->fetch();
         if (!$row) return null;
-        $users=new Users($row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], $row['id_user']);
+        $users=new Users($row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], (int)$row['id_try_class'], $row['id_user']);
         return $users;
     }
     function findAll(): array {
         $stmt = $this->pdo->query("SELECT * from users");
         $users=[];
         while ($row=$stmt->fetch()) {
-            $users[] = new Users($row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], $row['id_user']);
+            $users[] = new Users($row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], (int)$row['id_try_class'], $row['id_user']);
         }    
         return $users;
     }
     // CRUD - UPDATE
     public function update(Users $users): bool {
-        $stmt = $this->pdo->prepare("UPDATE users SET role=:role, firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, password=:password WHERE id_user=:id");
+        $stmt = $this->pdo->prepare("UPDATE users SET role=:role, firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, password=:password, id_try_class=:id_try_class WHERE id_user=:id");
         $stmt->bindValue(":role",$users->getRole());
         $stmt->bindValue(":firstname",$users->getFirstname());
         $stmt->bindValue(":lastname",$users->getLastname());
         $stmt->bindValue(":birthdate",$users->getBirthdate()->format('Y-m-d'));
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
-        $stmt->bindValue(":id",$users->getIdUser());
-        $result = $stmt->execute();
-        return $result;
+       // On gère le cas où l'id_try_class est nul
+    $idClass = $users->getIdTryClass();
+    $stmt->bindValue(":id_try_class", $idClass, $idClass === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+    
+    $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
+    return $stmt->execute();
     }
     // CRUD - DELETE
     public function delete(int $id): bool {
@@ -70,9 +76,60 @@ class UsersRepository {
         $stmt->execute();
         $row=$stmt->fetch();
         if (!$row) return null;
-        return new users((int)$row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], (int)$row['id_user']);
+        return new users((int)$row['role'], $row['firstname'], $row['lastname'], new DateTime($row['birthdate']), $row['email'], $row['password'], (int)$row['id_try_class'], $row['id_user']);
     }
-   // AUTRES
+    //JOINTURE AVEC LA TABLE TRYCLASSES 
+    //Récupère un utilisateur et les détails de sa séance d'essai associée
+    public function findUserWithTryClass(int $id): ?Users {
+        $sql = "SELECT u.*, t.class, t.class_category, t.date_ as class_date, t.time_ as class_time 
+                FROM users u 
+                LEFT JOIN try_classes t ON u.id_try_class = t.id_try_class 
+                WHERE u.id_user = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);        
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if (!$row) return null;
+
+    $user = new Users(
+        (int)$row['role'],
+        $row['firstname'],
+        $row['lastname'],
+        new \DateTime($row['birthdate']),
+        $row['email'],
+        $row['password'],
+        (int)$row['id_try_class'],
+        $row['id_user']
+    );
+
+    // Si l'utilisateur a une séance réservée, on crée l'objet TryClasses
+    if ($row['id_try_class']) {
+        $tryClass = new TryClasses(
+            $row['class'],
+            $row['class_category'],
+            new \DateTime($row['class_date']),
+            new \DateTime($row['class_time']),
+            (int)$row['id_try_class']
+        );
+        $user->setTryClasses($tryClass);
+    }
+
+    return $user;
+    }
+
+    //Met à jour la séance d'essai de l'utilisateur
+    public function updateTryClass(int $id_user, ?int $id_try_class): bool {
+        $sql = "UPDATE users SET id_try_class = :id_try_class WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($sql);
+    
+    // PDO::PARAM_NULL est utilisé si $classId est null
+        $stmt->bindValue(':id_try_class', $id_try_class, $id_try_class === null ? \PDO::PARAM_NULL : \PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $id_user, \PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    }
+    
     public function countTotalUsers(): int {
         return (int)$this->pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
     }
@@ -86,6 +143,5 @@ class UsersRepository {
         $stmt->execute();
         return (int)$stmt->fetchColumn();
     }
-
 }
 ?>

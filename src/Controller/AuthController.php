@@ -5,20 +5,22 @@ namespace App\Controller;
 use App\Service\AuthService;
 use App\Service\MembersService;
 use App\Service\UsersService;
+use App\Service\TryClassesService;
 
 class AuthController extends AbstractController{
     private UsersService $usersService;
     private AuthService $authService;
     private MembersService $membersService;
+    private TryClassesService $tryClassesService;
     
 
     //Injection des dépendances (outils déjà créés pour gérer la base de données)
-    public function __construct(UsersService $usersService, AuthService $authService, MembersService $membersService) {
+    public function __construct(UsersService $usersService, AuthService $authService, MembersService $membersService, TryClassesService $tryClassesService) {
         $this->usersService = $usersService;
         $this->authService = $authService;
         $this->membersService = $membersService;
+        $this->tryClassesService = $tryClassesService;
     }
-   
 
     //Affichage de la page de connexion
     public function index(): void {
@@ -44,8 +46,10 @@ class AuthController extends AbstractController{
 
     // 2. On passe tout le tableau $_POST au service avec capture des exceptions
     try {
-        $this->usersService->register($_POST);
+        // On récupère l'id du formulaire s'il existe
+        $id_try_class = isset($_POST['id_try_class']) ? (int)$_POST['id_try_class'] : null;
         
+        $this->usersService->register($_POST, $id_try_class);
         // Si tout s'est bien passé
         $_SESSION['flash_success'] = "Inscription réussie ! Vous pouvez vous connecter.";
         header('Location: /login');
@@ -64,14 +68,16 @@ class AuthController extends AbstractController{
         header('Location: /login');
         exit;
     }
-    // 1. On récupère les données du formulaire
+    // On récupère les données du formulaire
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-// 1. On vérifie le retour de la fonction login (true ou false)
+    //On vérifie le retour de la fonction login (true ou false)
     if ($this->authService->login($email, $password)) {
+        
         // SUCCÈS
         $_SESSION['flash_success'] = "Connexion réussie ! Bienvenue au BOXING CLUB LH.";
+    
         header('Location: /home');
         exit;
     } else {
@@ -81,7 +87,7 @@ class AuthController extends AbstractController{
         exit;
     }
     }
- //Déconnection de l'utilisateur
+    //Déconnection de l'utilisateur
     public function logout(): void {
         $this->authService->logout();
         $_SESSION['flash_success']  = "Vous êtes déconnecté.";
@@ -98,9 +104,9 @@ class AuthController extends AbstractController{
 
         $old = $_POST['old_password'] ?? '';
         $new = $_POST['new_password'] ?? '';
-        $userId = $_SESSION['id_user'];
+        $id_user = $_SESSION['id_user'];
 
-        if ($this->usersService->updatePassword($userId, $old, $new)) {
+        if ($this->usersService->updatePassword($id_user, $old, $new)) {
             header('Location: /profil?success=password_updated');
         } else {
             header('Location: /profil?error=invalid_password');

@@ -4,7 +4,29 @@
         <div class="divider"></div>
     </header>
 
-    <div class="profile-grid">
+           <?php if (!$member): ?>
+            <p>Vous n'êtes pas encore adhérent au club. <a href="/membership">Compléter mon dossier</a></p>
+                <h2>Ma Séance d'Essai</h2>
+
+                <?php if ($user->getTryClasses()): ?>
+                <div class="status-content">
+                <p>Tu es inscrit à la séance : <strong><?= htmlspecialchars($user->getTryClasses()->getClass()) ?></strong></p>
+                <p>Catégorie : <strong><?= htmlspecialchars($user->getTryClasses()->getClassCategory()) ?></strong></p>
+                <p>📅 Date : <?= $user->getTryClasses()->getDate()->format('d/m/Y') ?></p>
+                <p>🕒 Heure : <?= $user->getTryClasses()->getTime()->format('H:i') ?></p>
+                
+                <form action="/cancel-trial" method="POST" style="margin-top: 10px;">
+                    <button type="submit" class="btn-secondary" onclick="return confirm('Annuler cette séance ?')">Annuler ma réservation</button>
+                </form>
+                </div>
+                <?php else: ?>
+                <p>Tu n'as pas encore réservé de séance d'essai.</p>
+                <a href="/tryClasses" class="btn-primary" style="display: inline-block; background: #ff4d4d; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+                Réserver un créneau
+                </a>
+                <?php endif; ?>
+        <?php else: ?>  
+        <div class="profile-grid">                
         <section class="profile-card info-card">
             <div class="profile-avatar">
                 <?php if ($member && $member->getProfilPicture()): ?>
@@ -26,7 +48,6 @@
                     <li><strong>Adresse :</strong> <?= htmlspecialchars($member->getStreetNumber() . ' ' . $member->getStreet() . ', ' . $member->getPostcode() . ' ' . $member->getCity()) ?></li>
                 <?php endif; ?>
             </ul>
-
             <button type="button" class="btn-outline" id="openDialog">MODIFIER MON MOT DE PASSE</button>
         </section>
 
@@ -44,7 +65,8 @@
             </div>
         </section>
     </div>
-
+    <?php endif;?>
+  
     <dialog id="pwdDialog" class="lh-modal">
         <form method="POST" action="/update-password">
             <h2>SÉCURITÉ</h2>
