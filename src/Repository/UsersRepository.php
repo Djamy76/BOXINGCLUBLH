@@ -24,9 +24,9 @@ class UsersRepository {
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
         $id_class = $users->getIdTryClass();
-    $stmt->bindValue(":id_try_class", $id_class, $id_class === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(":id_try_class", $id_class, $id_class === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
     
-    return $stmt->execute();
+        return $stmt->execute();
     }
      // CRUD - READ
     public function findById(int $id): ?Users {
@@ -56,12 +56,14 @@ class UsersRepository {
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
        // On gère le cas où l'id_try_class est nul
-    $idClass = $users->getIdTryClass();
-    $stmt->bindValue(":id_try_class", $idClass, $idClass === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $idClass = $users->getIdTryClass();
+        $stmt->bindValue(":id_try_class", $idClass, $idClass === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
     
-    $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
-    return $stmt->execute();
+        $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
+
     // CRUD - DELETE
     public function delete(int $id): bool {
         $stmt = $this->pdo->prepare("DELETE from users WHERE id_user=:id");

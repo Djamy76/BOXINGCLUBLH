@@ -95,24 +95,24 @@ class AuthController extends AbstractController{
         exit;
     }
 
-    //Changement de mot de passe par un utilisateur connecté
-    public function updatePassword(): void {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /profil');
-            exit;
-        }
+    // //Changement de mot de passe par un utilisateur connecté
+    // public function updatePassword(): void {
+    //     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    //         header('Location: /profil');
+    //         exit;
+    //     }
 
-        $old = $_POST['old_password'] ?? '';
-        $new = $_POST['new_password'] ?? '';
-        $id_user = $_SESSION['id_user'];
+    //     $old = $_POST['old_password'] ?? '';
+    //     $new = $_POST['new_password'] ?? '';
+    //     $id_user = $_SESSION['id_user'];
 
-        if ($this->usersService->updatePassword($id_user, $old, $new)) {
-            header('Location: /profil?success=password_updated');
-        } else {
-            header('Location: /profil?error=invalid_password');
-        }
-        exit;
-    }
+    //     if ($this->usersService->updatePassword($id_user, $old, $new)) {
+    //         header('Location: /profil?success=password_updated');
+    //     } else {
+    //         header('Location: /profil?error=invalid_password');
+    //     }
+    //     exit;
+    // }
 }
 ?>
     
