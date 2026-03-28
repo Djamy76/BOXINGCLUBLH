@@ -3,26 +3,9 @@ session_start();
     
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController,TryClassesController};
+use App\Controller\{AdminController, HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController, NewsController, TryClassesController};
 use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService, TryClassesService};
 use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepository, UsersRepository, TryClassesRepository};
-
-    //Nettoyage de l'URL
-    $request = trim($_SERVER['REQUEST_URI'], '/');
-    $params = explode('/', $request); 
-    //Identification du contrôleur et de la méthode
-    $controller=array_shift($params); 
-    $method=array_shift($params); 
-    if ($controller=='') {$controller='Home';}
-    if ($method=='') {$method='index';}
-    $controllerName = !empty($params[0]) ? ucfirst($params[0]) : 'Home';
-    $method = !empty($params[1]) ? $params[1] : 'index';
-    //Définition de la variable
-    $controllerClass = 'App\\Controller\\' . $controller . 'Controller';
-    //Vérification de l'instance
-    if (!class_exists($controllerClass)) {
-        $params['errorCode']=404;
-    }
 
     //on se connecte à PDO
     try {
@@ -44,22 +27,24 @@ $usersRepository = new UsersRepository($pdo);
 $membersRepository = new MembersRepository($pdo);
 $tryClassesRepository = new TryClassesRepository($pdo);
 $usersService = new UsersService($usersRepository);
-$membersService = new MembersService($membersRepository);
-$tryClassesService = new TryClassesService($tryClassesRepository);
+$membersService = new MembersService($membersRepository,$usersRepository);
+$tryClassesService = new TryClassesService($tryClassesRepository,$usersRepository);
 $authService = new AuthService($usersRepository, $membersRepository, $tryClassesRepository);
 
-
 // On instancie les contrôleurs nécessaires
+$adminController = new AdminController($authService, $usersService, $tryClassesService);
 $authController = new AuthController($usersService, $authService,$membersService,$tryClassesService);
 $homeController = new HomeController($usersService, $authService,$membersService);
 $profilController = new ProfilController($usersService, $authService, $membersService,$tryClassesService);
 $tryClassesController = new TryClassesController($tryClassesService, $usersService, $authService);
+$mentionsLegalesController = new MentionsLegalesController($pdo);
+$newsController = new NewsController($pdo);
 
 // 1. Nettoyer l'URI pour enlever le dossier racine si nécessaire
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Liste des pages accessibles sans être connecté
-$publicRoutes = ['/login', '/register', '/'];
+$publicRoutes = ['/home','/login', '/register', '/'];
 // On vérifie : 
 // 1. Si l'URI n'est pas dans les routes publiques
 // 2. ET qu'il n'y a pas de session utilisateur
@@ -70,6 +55,15 @@ if (!in_array($uri, $publicRoutes) && !$authService->isAuthenticated()) {
 
 //--- ROUTE DES CAS ---
 switch ($uri) {
+    case '/admin':
+    // 1. Si pas admin, on renvoie vers l'accueil (et pas vers /admin !)
+        if (!$authService->isAdmin()) {
+            header('Location: /home');
+         exit;
+        }
+    // 2. On appelle la méthode du contrôleur (pas de $this->render ici)
+    $adminController->dashboard();
+    break;
     case '/':
     case '/login':
         // Si c'est un envoi de formulaire (POST)
@@ -100,12 +94,20 @@ switch ($uri) {
     case '/profil/update-password':
         // Seul le POST est autorisé ici par sécurité
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $profilController->updatePassword();
+            $authController->updatePassword();
         } else {
             header('Location: /profil');
         }
         break;
 
+    case '/update-profil':
+        // Seul le POST est autorisé ici par sécurité
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $profilController->updateProfil();
+        } else {
+            header('Location: /profil');
+        }
+        break;    
     case '/membership':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $profilController->membershipregister();
@@ -117,13 +119,38 @@ switch ($uri) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tryClassesController->book();
         } else {
-            $tryClassesController->ShowBookingForm();
-        //header('Location: /tryClasses');
+            $tryClassesController->showBookingForm();
         }
         break;     
+    case '/cancel-trial':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tryClassesController->cancelTry();
+        } else {
+        $tryClassesController->showBookingForm();
+        }
+        break;
+    case '/planning':
+        $tryClassesController->showPlanning(); 
+        break;
+    case '/admin_planning':
+        $adminController->managePlanning();
+    break;   
+    case '/planning_delete':
+        $adminController->deleteClass();
+    break;  
+    case '/mentions_legales':
+        $mentionsLegalesController->index();
+        break;    
+    case '/privacy':
+        $mentionsLegalesController->privacy();
+        break;
+    case '/actualites':
+        $newsController = new App\Controller\NewsController();
+        $newsController->index();
+    break;
     default:
-        // TO DO gérer une e404 ici
-        echo "Page non trouvée";
+        $errorController = new App\Controller\ErrorController();
+        $errorController->notFound();
         break;
 }
 ?>

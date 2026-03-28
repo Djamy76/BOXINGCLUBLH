@@ -5,7 +5,7 @@ use DateTime;
 
 class Users {
     private ?int $id_user;
-    private int $role;
+    private ?string $role = null;
     private string $firstname;
     private string $lastname;
     private DateTime $birthdate;

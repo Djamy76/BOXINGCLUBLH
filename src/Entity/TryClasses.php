@@ -9,8 +9,7 @@ class TryClasses {
     private string $class_category;
     private DateTime $date;
     private DateTime $time;
-
-
+  
     public function __construct(
     string $class,
     string $class_category,

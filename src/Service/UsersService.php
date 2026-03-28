@@ -83,45 +83,61 @@ class UsersService {
         return $this->usersRepository->findById($id);
     }
 
-    public function updatePassword(int $id_user, string $oldPassword, string $newPassword): bool {
-        $user = $this->usersRepository->findById($id_user);
+public function updatePassword(int $id_user, string $old, string $new, string $confirm): bool {
 
-        // Vérification de l'existence et du mot de passe actuel
-        if ($user && password_verify($oldPassword, $user->getPassword())) {
-            // Validation : Le nouveau mot de passe doit respecter les règles 
-            $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID);
-            $user->setPassword($hashedPassword);
-            
-        return $this->usersRepository->update($user);
-        }
+    $user = $this->usersRepository->findById($id_user);
 
+    if (!$user) {
         return false;
     }
+
+    // Vérification ancien mot de passe
+    if (!password_verify($old, $user->getPassword())) {
+        throw new \Exception("L'ancien mot de passe est incorrect.");
+    }
+
+    // Vérifier longueur
+    if (strlen($new) < 8) {
+        throw new \Exception('Le mot de passe doit contenir au moins 8 caractères.');
+    }
+
+    // Vérifier complexité
+    if (
+        !preg_match('/[A-Z]/', $new) ||
+        !preg_match('/[a-z]/', $new) ||
+        !preg_match('/[0-9]/', $new)
+    ) {
+        throw new \Exception('Le mot de passe doit contenir une majuscule, une minuscule et un chiffre.');
+    }
+
+    // Vérifier correspondance
+    if ($new !== $confirm) {
+        throw new \Exception("Les nouveaux mots de passe ne sont pas identiques.");
+    }
+    if ($new === $old) {
+        throw new \Exception("Le nouveau mot de passe est identique au précédent.");
+    }
+
+    // Hash + update
+    $hashedPassword = password_hash($new, PASSWORD_ARGON2ID);
+    $user->setPassword($hashedPassword);
+
+    return $this->usersRepository->update($user, $hashedPassword);
+    }
+
 
     public function deleteUser(int $usersId): void {
         $msgSuccess = $this->usersRepository->delete($usersId);
         
         if (!$msgSuccess) {
-            throw new \Exception("Cette utilisateur ne peut pas être supprimée");
+            throw new \Exception("Cet utilisateur ne peut pas être supprimée");
         }
     }
-    public function bookTryClass(int $id_user, int $id_try_class): bool {
-    // On récupère l'utilisateur
-        $user = $this->usersRepository->findById($id_user);
     
-        if (!$user) {
-            throw new \Exception("Utilisateur non trouvé.");    
-        }
-    // On met à jour l'ID de la séance d'essai
-        $user->setIdTryClass($id_try_class);
-   
-    // On appelle la méthode update du Repository 
-    return $this->usersRepository->update($user);
-    }
-
     public function cancelTryBooking(int $id_user): bool {
     return $this->usersRepository->updateTryClass($id_user, null);
     }
+
     public function getUserByIdWithTryClass(int $id_user): ?users {
         return $this->usersRepository->findUserWithTryClass($id_user);
     }

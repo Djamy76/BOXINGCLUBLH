@@ -35,7 +35,7 @@ class TryClassesRepository {
         return $tryClasses;
     }
     function findAll(): array {
-        $stmt = $this->pdo->query("SELECT * from try_classes");
+        $stmt = $this->pdo->query("SELECT id_try_class, class, class_category, date, from try_classes");
         $tryClasses=[];
         while ($row=$stmt->fetch()) {
             $tryClasses[] = new TryClasses($row['class'], $row['class_category'], new DateTime($row['date']), new DateTime($row['time']), $row['id_try_class']);
@@ -61,5 +61,54 @@ class TryClassesRepository {
         return $result;
     }
     
+
+    // AUTRES METHODES
+
+    // RECUPERATION DES COURS DE LA SEMAINE ACTUELLE
+
+    public function findByDateRange(\DateTime $start, \DateTime $end): array {
+    $sql = "SELECT * FROM try_classes 
+            WHERE date BETWEEN :start AND :end 
+            ORDER BY date ASC, time ASC";
+            
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+        ':start' => $start->format('Y-m-d'),
+        ':end'   => $end->format('Y-m-d')
+    ]);
+
+    $classes = [];
+    while ($row = $stmt->fetch()) {
+        // On transforme chaque ligne en objet Entity TryClasses
+        $classes[] = new TryClasses(
+            $row['class'],
+            $row['class_category'],
+            new \DateTime($row['date']),
+            new \DateTime($row['time']),
+            (int)$row['id_try_class']
+        );
+    }
+    return $classes;
+    }
+    // Fonctions save et delete pour la gestion du planning par l'administrateur
+
+    public function addClass(TryClasses $tryClass): bool {
+        $sql = "INSERT INTO try_classes (class, class_category, date, time) 
+                VALUES (:class, :category, :date, :time)";
+    
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'class'    => $tryClass->getClass(),
+            'category' => $tryClass->getClassCategory(),
+            'date'     => $tryClass->getDate()->format('Y-m-d'),
+            'time'     => $tryClass->getTime()->format('H:i:s')
+    ]);
+    }
+
+    public function deleteClass(int $id): bool {
+        $sql = "DELETE FROM try_classes WHERE id_try_class = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
 }
 ?>

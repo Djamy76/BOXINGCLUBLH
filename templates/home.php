@@ -2,7 +2,7 @@
     <header class="home-header">
         <h1 class="main-title">BOXING CLUB <span class="accent">LH</span></h1>
         <div class="divider"></div>
-        <p class="welcome-msg">BON RETOUR AU CLUB, <?= htmlspecialchars($userEmail ?? 'CHAMPION') ?> !</p>
+        <p class="welcome-msg">BON RETOUR AU CLUB, <?= htmlspecialchars($useremail ?? 'CHAMPION') ?> !</p>
     </header>
 
     <section class="menu-grid">

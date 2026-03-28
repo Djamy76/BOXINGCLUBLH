@@ -26,7 +26,61 @@
                 </a>
                 <?php endif; ?>
         <?php else: ?>  
-        <div class="profile-grid">                
+        <div class="profile-grid">    
+            <section class="profile-card info-card">
+            <h2>Modifier mes informations</h2>
+
+
+
+        <form method="POST" action="update-profil" enctype="multipart/form-data">
+        <div class="auth-right">
+        <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" name="firstname" 
+                   value="<?= htmlspecialchars($_SESSION['old_input']['firstname'] ?? $member->getFirstname()) ?>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Nom</label>
+            <input type="text" name="lastname" 
+                   value="<?= htmlspecialchars($_SESSION['old_input']['lastname'] ?? $member->getLastname()) ?>" required>
+        </div>
+        <div class="form-group">
+            <label>Téléphone</label>
+            <input type="tel" name="phone_number" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['phone_number'] ?? $member->getPhoneNumber()) ?>" >
+        </div>
+        <div class="form-group">
+            <label>Adresse</label>
+            <input type="text" name="street_number" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['street_number'] ?? $member->getStreetNumber()) ?>" >
+            <input type="text" name="street" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['street'] ?? $member->getStreet()) ?>" >
+        </div>
+        <div class="form-group">
+            <input type="number" name="postcode" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['postcode'] ?? $member->getPostcode()) ?>" >
+            <input type="text" name="city" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['city'] ?? $member->getCity()) ?>" >
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" 
+                value="<?= htmlspecialchars($_SESSION['old_input']['email'] ?? $member->getEmail()) ?>" required>
+        </div>
+        <div class="form-group">
+            <label>Photo de profil</label>
+            <input type="file" name="profil_picture" alt="Photo de profil" >
+        </div>
+        <div class="form-group">
+            <label>Certificat Médical (JPG/PNG)</label>
+            <input type="file" name="medical_certificate" alt="Certificat médical">
+        </div>
+        <button type="submit" class="btn-main">Mettre à jour</button>
+    </form>
+
+    <?php unset($_SESSION['old_input']); ?>
+    </section>                
         <section class="profile-card info-card">
             <div class="profile-avatar">
                 <?php if ($member && $member->getProfilPicture()): ?>
@@ -68,7 +122,7 @@
     <?php endif;?>
   
     <dialog id="pwdDialog" class="lh-modal">
-        <form method="POST" action="/update-password">
+        <form method="POST" action="/profil/update-password">
             <h2>SÉCURITÉ</h2>
             <p>Changez votre mot de passe ci-dessous</p>
             
@@ -82,6 +136,11 @@
                 <input type="password" name="new_password" required>
             </div>
 
+            <div class="form-group">
+                <label>Confirmer mot de passe</label>
+                <input type="password" name="confirm_password" required>
+            </div>
+
             <div class="dialog-actions">
                 <button type="submit" class="btn-main">VALIDER</button>
                 <button type="button" id="closeDialog" class="btn-cancel">ANNULER</button>
@@ -89,9 +148,3 @@
         </form>
     </dialog>
 </main>
-
-<script>
-    const dialog = document.getElementById('pwdDialog');
-    document.getElementById('openDialog').onclick = () => dialog.showModal();
-    document.getElementById('closeDialog').onclick = () => dialog.close();
-</script>

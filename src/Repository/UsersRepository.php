@@ -3,11 +3,15 @@ namespace App\Repository;
 
 use App\Entity\TryClasses;
 use App\Entity\Users;
+use App\Service\AuthService;
+use App\Service\UsersService;
 use \PDO;
 use \DateTime;
 
 class UsersRepository {
     private PDO $pdo;
+    private AuthService $authService;
+    private UsersService $usersService;
 
     public function __construct(PDO $pdo) {
         $this->pdo=$pdo;
@@ -24,9 +28,8 @@ class UsersRepository {
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
         $id_class = $users->getIdTryClass();
-    $stmt->bindValue(":id_try_class", $id_class, $id_class === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-    
-    return $stmt->execute();
+        $stmt->bindValue(":id_try_class", $id_class, $id_class === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        return $stmt->execute();
     }
      // CRUD - READ
     public function findById(int $id): ?Users {
@@ -56,7 +59,11 @@ class UsersRepository {
         $stmt->bindValue(":email",$users->getEmail());
         $stmt->bindValue(":password",$users->getPassword());
        // On gère le cas où l'id_try_class est nul
-    $idClass = $users->getIdTryClass();
+        $idClass = $users->getIdTryClass();
+        if (empty($idClass)) {
+        $idClass = null;
+        }
+
     $stmt->bindValue(":id_try_class", $idClass, $idClass === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
     
     $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
@@ -81,7 +88,7 @@ class UsersRepository {
     //JOINTURE AVEC LA TABLE TRYCLASSES 
     //Récupère un utilisateur et les détails de sa séance d'essai associée
     public function findUserWithTryClass(int $id): ?Users {
-        $sql = "SELECT u.*, t.class, t.class_category, t.date_ as class_date, t.time_ as class_time 
+        $sql = "SELECT u.*, t.class, t.class_category, t.date as date, t.time as time 
                 FROM users u 
                 LEFT JOIN try_classes t ON u.id_try_class = t.id_try_class 
                 WHERE u.id_user = :id";
@@ -108,9 +115,9 @@ class UsersRepository {
         $tryClass = new TryClasses(
             $row['class'],
             $row['class_category'],
-            new \DateTime($row['class_date']),
-            new \DateTime($row['class_time']),
-            (int)$row['id_try_class']
+            new \DateTime($row['date']),
+            new \DateTime($row['time']),
+            (int)$row['id_try_class'],
         );
         $user->setTryClasses($tryClass);
     }
@@ -128,6 +135,14 @@ class UsersRepository {
         $stmt->bindValue(':id_user', $id_user, \PDO::PARAM_INT);
     
     return $stmt->execute();
+    }
+
+    // On compte le nombre de séances d'essai
+    public function countBookingsBySession(int $id_try_class): int {
+        $sql = "SELECT COUNT(*) FROM users WHERE id_try_class = :id_try_class";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id_try_class' => $id_try_class]);
+        return (int)$stmt->fetchColumn();
     }
     
     public function countTotalUsers(): int {

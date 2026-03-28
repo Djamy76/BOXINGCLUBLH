@@ -39,14 +39,7 @@ class ProfilController extends AbstractController {
             'isLoggedIn' => true
         ]);
     }
-    public function cancelTry(): void {
-        if ($this->authService->isAuthenticated()) {
-            $this->usersService->cancelTryBooking($_SESSION['id_user']);
-        $_SESSION['flash_success'] = "Réservation annulée.";
-        }
-        header('Location: /profil');
-        exit;
-    }
+
     // Affiche le formulaire d'adhésion
     public function showMembershipForm(): void {
         $this->render('membership', [
@@ -63,51 +56,81 @@ class ProfilController extends AbstractController {
         }
 
       
-    // INJECTION DE L'ID UTILISATEUR (Sécurité)
-    // On s'assure que l'ID utilisateur est bien présent
-    if (!isset($_SESSION['id_user'])) {
-        $_SESSION['flash_error'] = "Vous devez être connecté.";
-        header('Location: /login');
+        // INJECTION DE L'ID UTILISATEUR (Sécurité)
+        // On s'assure que l'ID utilisateur est bien présent
+        if (!isset($_SESSION['id_user'])) {
+            $_SESSION['flash_error'] = "Vous devez être connecté.";
+            header('Location: /login');
         exit;
-    }
+        }
 
          // Récupération des données
         $data = $_POST;
         $files = $_FILES;
         $id_user =$_SESSION['id_user'];
 
+        try {
+            $this->membersService->createMember($data, $files, $id_user);
+            $_SESSION['flash_success'] = "Félicitations ! Vous faites partie de la Team !";
+            header('Location: /home'); // Ou vers /profil
+        exit;
+
+        } catch (\Exception $e) {
+        // En cas d'erreur, on stocke le message et on revient sur le formulaire
+            $_SESSION['flash_error'] = $e->getMessage();
+            header('Location: /membership');
+        exit;
+        }
+    }
+           
+
+    public function updateProfil(): void {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/update-profil') {
+
+    $id_user = $_SESSION['id_user'];
+    $firstname = $_POST['firstname'] ?? '';
+    $lastname  = $_POST['lastname'] ?? '';
+    $street_number = $_POST['street_number'] ?? '';
+    $street = $_POST['street'] ?? '';
+    $postcode = $_POST['postcode'] ?? '';
+    $city = $_POST['city'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone_number = $_POST['phone_number'] ?? '';
+    $files = $_FILES;
+    
     try {
-        $this->membersService->createMember($data, $files, $id_user);
-        $_SESSION['flash_success'] = "Félicitations ! Vous faites partie de la Team !";
-        header('Location: /home'); // Ou vers /profil
+        // Validation simple
+        if (strlen($firstname) < 2 || strlen($lastname) < 2) {
+            throw new \Exception("Prénom et nom doivent contenir au moins 2 caractères.");
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("Adresse email invalide.");
+        }
+
+        // Appel au service pour mettre à jour
+        $this->membersService->updateProfil((int)$id_user, $firstname, $lastname, $street_number, $street, $postcode, $city, $email, $phone_number, $files);
+
+        $_SESSION['flash_success'] = "Profil mis à jour avec succès !";
+        header("Location: /profil");
         exit;
 
     } catch (\Exception $e) {
-        // En cas d'erreur, on stocke le message et on revient sur le formulaire
         $_SESSION['flash_error'] = $e->getMessage();
-        header('Location: /membership');
+        $_SESSION['old_input'] = [
+            'firstname' => $firstname,
+            'lastname'  => $lastname,
+            'street_number' => $street_number,
+            'street' => $street,
+            'postcode' => $postcode,
+            'city' => $city,
+            'email' => $email,
+            'phone_number' => $phone_number,
+            $_FILES => $files
+        ];
+        header("Location: /profil");
         exit;
     }
-}
-
-    public function updatePassword(): void {
-        if (!$this->authService->isAuthenticated()) {
-            header('Location: /login');
-            exit;
-        }
-
-        // Validation simple
-        if (empty($_POST['old_password']) || empty($_POST['new_password'])) {
-            $_SESSION['flash_error'] = "Champs obligatoires.";
-        } 
-        elseif ($this->usersService->updatePassword($_SESSION['id_user'], $_POST['old_password'], $_POST['new_password'])) {
-            $_SESSION['flash_success'] = "Mot de passe mis à jour.";
-        } else {
-            $_SESSION['flash_error'] = "Erreur lors de la mise à jour.";
-        }
-
-        // On redirige vers la page profil pour rafraîchir
-        header('Location: /profil');
-        exit;
     }
 }
+}
+?>

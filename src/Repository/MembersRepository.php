@@ -64,7 +64,9 @@ class MembersRepository {
         $stmt->bindValue(":phone_number",$members->getPhoneNumber());
         $stmt->bindValue(":profil_picture",$members->getProfilPicture());
         $stmt->bindValue(":medical_certificate",$members->getMedicalCertificate());
-        $stmt->bindValue(":id_user", $members->getIdUser(), PDO::PARAM_INT);        
+        $stmt->bindValue(":id_user", $members->getIdUser(), PDO::PARAM_INT);
+        $stmt->bindValue(":id", $members->getIdMember(), PDO::PARAM_INT);
+        //var_dump($members->getProfilPicture(),$stmt);die;
         $result = $stmt->execute();
         return $result;
     }
@@ -144,8 +146,5 @@ class MembersRepository {
         return $members;
     }
 
-    public function countTotalMembers(): int {
-        return (int)$this->pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
-    }
 }
 ?>

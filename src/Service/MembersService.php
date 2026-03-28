@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use App\Repository\MembersRepository;
+use App\Repository\UsersRepository;
 use App\Entity\Members;
 use \Exception;
 use \PDO;
@@ -11,9 +12,11 @@ use \DateTime;
 
 class MembersService {
     private MembersRepository $membersRepository;
+    private UsersRepository $usersRepository;
 
-    public function __construct(MembersRepository $membersrepository) {
+    public function __construct(MembersRepository $membersrepository, UsersRepository $usersRepository) {
         $this->membersRepository=$membersrepository;
+        $this->usersRepository=$usersRepository;
     }
 
     public function createMember(array $data, array $files, int $id_user): bool {
@@ -58,13 +61,7 @@ class MembersService {
         return $this->membersRepository->create($newMember);
     }
 
-    public function getmemberStatistics(): array {
-        return [
-            'total' => $this->membersRepository->countTotalMembers(),
-            // 'active' => $this->membersRepository->countActivemembers(15)
-        ];
-    }
-
+    
     public function getMemberByUserId(int $id_user): ?members {
         return $this->membersRepository->findByUserId($id_user);
     }
@@ -80,5 +77,68 @@ class MembersService {
             throw new \Exception("Cette adhérant ne peut pas être supprimée");
         }
     }
+ 
+    // MODIFICATION DU PROFILE MEMBRE
+
+    public function updateProfil(
+    int $id_user, 
+    string $firstname,      
+    string $lastname,
+    string $street_number,
+    string $street,
+    string $postcode,
+    string $city,
+    string $email,
+    string $phone_number,
+    $files): bool {
+        // On récupère l'entité membre
+        $member = $this->membersRepository->findByUserId($id_user);
+        
+        if (!$member) {
+        throw new \Exception("Dossier d'adhérent introuvable.");
+        }
+       
+        // Traitement de la photo : si un nouveau fichier est envoyé, on le lit. 
+    // Sinon, on garde celle déjà présente dans l'objet $member.
+    if (!empty($files['profil_picture']['tmp_name'])) {
+        $member->setProfilPicture(file_get_contents($files['profil_picture']['tmp_name']));
+    }
+
+    // Idem pour le certificat médical
+    if (!empty($files['medical_certificate']['tmp_name'])) {
+        $member->setMedicalCertificate(file_get_contents($files['medical_certificate']['tmp_name']));
+    }
+
+        // On met à jour l'objet Member
+        $member->setFirstname($firstname)
+            ->setLastname($lastname)
+            ->setStreetNumber($street_number)
+            ->setStreet($street)
+            ->setPostcode($postcode)
+            ->setCity($city)
+            ->setEmail($email)
+            ->setPhoneNumber($phone_number);
+          
+        // On demande au repository de faire le "UPDATE members SET..."
+        $successMember = $this->membersRepository->update($member);
+
+        // On met à jour aussi la table USERS
+        // Pour que l'email de connexion change aussi
+        $user = $this->usersRepository->findById($id_user);
+        $user->setFirstname($firstname)->setLastname($lastname)->setEmail($email);
+        $this->usersRepository->update($user); 
+
+        return $successMember;
+    }
+
+    // public function countTotalMembers(): int {
+    //     return (int)$this->pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
+    // }
+    // public function getmemberStatistics(): array {
+    //     return [
+    //         'total' => $this->countTotalMembers(),
+    //         // 'active' => $this->membersRepository->countActivemembers(15)
+    //     ];
+    // }
 }
 ?>

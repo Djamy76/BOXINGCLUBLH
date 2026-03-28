@@ -58,14 +58,27 @@ class AuthService {
             // On remplit la session avec les infos essentielles
             $_SESSION['id_user'] = $user->getIdUser();
             $_SESSION['email']  = $user->getEmail();
-            $_SESSION['role'] = $user->getRole();
+            $_SESSION['role'] = (int)$user->getRole();
             return true;
         }
 
         return false;
     }  
 
-    
+    public function updatePassword(int $id_user, string $oldPassword, string $newPassword): bool {
+        $user = $this->usersRepository->findById($id_user);
+
+        // Vérification de l'existence et du mot de passe actuel
+        if ($user && password_verify($oldPassword, $user->getPassword())) {
+            // Validation : Le nouveau mot de passe doit respecter les règles 
+            $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID);
+            $user->setPassword($hashedPassword);
+            
+        return $this->usersRepository->update($user);
+        }
+
+        return false;
+    }
 
     public function logout(): void { 
         // On vide les données de connexion mais on garde la session ouverte 
@@ -85,5 +98,5 @@ class AuthService {
     public function isAdmin(): bool {
         return isset($_SESSION['role']) && $_SESSION['role'] === self::ROLE_ADMIN;
     }
-
 }
+?>

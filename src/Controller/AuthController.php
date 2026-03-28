@@ -72,6 +72,7 @@ class AuthController extends AbstractController{
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
+    
     //On vérifie le retour de la fonction login (true ou false)
     if ($this->authService->login($email, $password)) {
         
@@ -94,25 +95,34 @@ class AuthController extends AbstractController{
         header('Location: /login');
         exit;
     }
-
-    //Changement de mot de passe par un utilisateur connecté
     public function updatePassword(): void {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /profil');
+        // Sécurité : Vérifier si l'utilisateur est connecté
+        if (!$this->authService->isAuthenticated() || !isset($_SESSION['id_user'])) {
+            header('Location: /login');
             exit;
         }
-
+    
+        // Récupération des données du formulaire
         $old = $_POST['old_password'] ?? '';
         $new = $_POST['new_password'] ?? '';
-        $id_user = $_SESSION['id_user'];
+        $confirm = $_POST['confirm_password'] ?? '';
+        $id_user = (int)$_SESSION['id_user'];
 
-        if ($this->usersService->updatePassword($id_user, $old, $new)) {
-            header('Location: /profil?success=password_updated');
-        } else {
-            header('Location: /profil?error=invalid_password');
+        try {
+            if ($this->usersService->updatePassword($id_user, $old, $new, $confirm)) {
+                $_SESSION['flash_success'] = "Ton mot de passe a été modifié !";
+            } else {
+                $_SESSION['flash_error'] = "Impossible de mettre à jour le mot de passe.";
+            }
+        } catch (\Exception $e) {
+            // On attrape les erreurs de validation (ex: mot de passe trop court)
+            $_SESSION['flash_error'] = $e->getMessage();
         }
+
+        // REDIRECTION :
+        header('Location: /profil');
         exit;
-    }
+    }  
 }
 ?>
     
