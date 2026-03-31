@@ -4,16 +4,17 @@
 
         <div class="admin-card" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd;">
             <h2 style="font-family: var(--font-secondary); margin-bottom: 15px;">Ajouter un cours</h2>
-            <form action="/admin/planning/add" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <input type="text" name="class" placeholder="Nom du cours (ex: Boxe Anglaise)" required style="padding: 10px;">
+            <form action="/planning/add" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <input type="text" name="class" placeholder="Nom du cours (ex: Cardio Boxe)" required style="padding: 10px;">
                 <select name="class_category" required style="padding: 10px;">
-                    <option value="Adulte">Adulte</option>
-                    <option value="Enfant">Enfant</option>
-                    <option value="Compétition">Compétition</option>
+                    <option value="Amateur">Boxe Amateur</option>
+                    <option value="Enfant">Boxe Enfant</option>
+                    <option value="Pro">Boxe Pro</option>
+                    <option value="Training">Training</option>
                 </select>
                 <input type="date" name="date" required style="padding: 10px;">
                 <input type="time" name="time" required style="padding: 10px;">
-                <button type="submit" class="btn-main" style="background: var(--club-blue); color: white; border: none; cursor: pointer;">AJOUTER AU PLANNING</button>
+                <button type="submit" class="btn-main">AJOUTER AU PLANNING</button>
             </form>
         </div>
 
@@ -30,7 +31,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($planning as $day => $sessions): ?>
+                    <?php foreach ($planning as $day => $classes): ?>
+                        <?php var_dump($classes); die;?>
                         <?php foreach ($sessions as $session): ?>
                             <tr>
                                 <td><?= htmlspecialchars($day) ?></td>

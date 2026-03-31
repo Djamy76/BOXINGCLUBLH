@@ -13,16 +13,18 @@ class HomeController extends AbstractController{
         $this->authService = $authService;
     }
     public function index(): void {
-        // 1. Vérification de sécurité
-        if (!$this->authService->isAuthenticated()) {
-            header('Location: /login');
-            exit;
+        $email = $_SESSION['user_email'] ?? null;
+        $user = null;
+
+        if ($email) {
+        // On récupère l'objet complet via le service
+            $user = $this->usersService->getUserByEmail($_SESSION['user_email']);
         }
-        // 2. Affichage de la vue 
+
         $this->render('home', [
-            'title' => 'Tableau de bord - Boxing Club LH',
-            'userEmail' => $_SESSION['email'] ?? 'Utilisateur'
-      ]);
+            'title' => 'Club Sports de combat Le Havre',
+            'user' => $user // On envoie l'OBJET $user, pas juste l'email
+        ]);
     }
 }
 ?>

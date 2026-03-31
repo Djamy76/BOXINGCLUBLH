@@ -25,15 +25,16 @@ class TryClassesController extends AbstractController {
         ]);
     }
     // Affiche le formulaire de réservation
-   public function showBookingForm(): void {
-    // On demande les données prêtes au service
-    $planning = $this->tryClassesService->getWeeklyPlanning();
+    public function showBookingForm(): void {
+        // On demande les données prêtes au service
+        $planning = $this->tryClassesService->getWeeklyPlanning();
 
-    // On les envoie à la vue
-    $this->render('try_class_booking', [
-        'planning'   => $planning,
-        'isLoggedIn' => $this->authService->isAuthenticated()
-    ]);
+        // On les envoie à la vue
+        $this->render('try_class_booking', [
+            'title' =>"Séance d'essai",
+            'planning'   => $planning,
+            'isLoggedIn' => $this->authService->isAuthenticated()
+        ]);
     }
 
     public function book(): void {

@@ -5,7 +5,7 @@ class MentionsLegalesController extends AbstractController {
     
     public function index(): void {
         $this->render('mentions_legales', [
-            'title' => 'Mentions Légales - Boxing Club'
+            'title' => 'Mentions Légales'
         ]);
     }
     public function privacy(): void {

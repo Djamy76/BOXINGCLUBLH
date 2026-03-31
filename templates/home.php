@@ -2,7 +2,9 @@
     <header class="home-header">
         <h1 class="main-title">BOXING CLUB <span class="accent">LH</span></h1>
         <div class="divider"></div>
-        <p class="welcome-msg">BON RETOUR AU CLUB, <?= htmlspecialchars($useremail ?? 'CHAMPION') ?> !</p>
+        <p class="welcome-msg">
+            <?php if ($user) : ?> BON RETOUR AU CLUB, <?= htmlspecialchars($user->getLastname()) ?> !
+            <?php else: ?> BON RETOUR AU CLUB, CHAMPION ! <?php endif; ?></p>
     </header>
 
     <section class="menu-grid">

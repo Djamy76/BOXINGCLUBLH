@@ -72,3 +72,19 @@ sessionCards.forEach(card => {
     });
 });
 });
+
+ /* ==========================================
+    CANONICAL
+   ========================================== */
+
+const routes = {
+    "jolie-url": "/url/fonctionnel"
+};
+
+const path = window.location.pathname;
+
+const canonical = document.querySelector("link[rel='canonical']");
+
+if(routes[path]){
+    canonical.href = window.location.origin + path;
+}

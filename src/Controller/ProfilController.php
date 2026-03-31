@@ -34,6 +34,7 @@ class ProfilController extends AbstractController {
 
         // AFFICHER la vue
         $this->render('profil', [
+            'title' => 'Page de profil',
             'user' => $user,
             'member'=> $member,
             'isLoggedIn' => true
@@ -43,15 +44,16 @@ class ProfilController extends AbstractController {
     // Affiche le formulaire d'adhésion
     public function showMembershipForm(): void {
         $this->render('membership', [
-        'isLoggedIn' => $this->authService->isAuthenticated()
-    ]);
+            'title' => "Formulaire d'adhésion",
+            'isLoggedIn' => $this->authService->isAuthenticated()
+        ]);
     }
 
     // Traite la soumission de l'adhésion par le formulaire
     public function membershipregister(): void {
        
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        $this->showMembershipForm();
+            $this->showMembershipForm();
         return;
         }
 
@@ -85,52 +87,51 @@ class ProfilController extends AbstractController {
            
 
     public function updateProfil(): void {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/update-profil') {
-
-    $id_user = $_SESSION['id_user'];
-    $firstname = $_POST['firstname'] ?? '';
-    $lastname  = $_POST['lastname'] ?? '';
-    $street_number = $_POST['street_number'] ?? '';
-    $street = $_POST['street'] ?? '';
-    $postcode = $_POST['postcode'] ?? '';
-    $city = $_POST['city'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone_number = $_POST['phone_number'] ?? '';
-    $files = $_FILES;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/update-profil') {
+            $id_user = $_SESSION['id_user'];
+            $firstname = $_POST['firstname'] ?? '';
+            $lastname  = $_POST['lastname'] ?? '';
+            $street_number = $_POST['street_number'] ?? '';
+            $street = $_POST['street'] ?? '';
+            $postcode = $_POST['postcode'] ?? '';
+            $city = $_POST['city'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $phone_number = $_POST['phone_number'] ?? '';
+            $files = $_FILES;
     
-    try {
-        // Validation simple
-        if (strlen($firstname) < 2 || strlen($lastname) < 2) {
-            throw new \Exception("Prénom et nom doivent contenir au moins 2 caractères.");
+            try {
+            // Validation simple
+               if (strlen($firstname) < 2 || strlen($lastname) < 2) {
+                    throw new \Exception("Prénom et nom doivent contenir au moins 2 caractères.");
+                }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new \Exception("Adresse email invalide.");
+                }
+
+            // Appel au service pour mettre à jour
+                $this->membersService->updateProfil((int)$id_user, $firstname, $lastname, $street_number, $street, $postcode, $city, $email, $phone_number, $files);
+
+                $_SESSION['flash_success'] = "Profil mis à jour avec succès !";
+                header("Location: /profil");
+                exit;
+
+            } catch (\Exception $e) {
+                $_SESSION['flash_error'] = $e->getMessage();
+                $_SESSION['old_input'] = [
+                'firstname' => $firstname,
+                'lastname'  => $lastname,
+                'street_number' => $street_number,
+                'street' => $street,
+                'postcode' => $postcode,
+                'city' => $city,
+                'email' => $email,
+                'phone_number' => $phone_number,
+                $_FILES => $files
+                ];
+                header("Location: /profil");
+                exit;
+            }
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("Adresse email invalide.");
-        }
-
-        // Appel au service pour mettre à jour
-        $this->membersService->updateProfil((int)$id_user, $firstname, $lastname, $street_number, $street, $postcode, $city, $email, $phone_number, $files);
-
-        $_SESSION['flash_success'] = "Profil mis à jour avec succès !";
-        header("Location: /profil");
-        exit;
-
-    } catch (\Exception $e) {
-        $_SESSION['flash_error'] = $e->getMessage();
-        $_SESSION['old_input'] = [
-            'firstname' => $firstname,
-            'lastname'  => $lastname,
-            'street_number' => $street_number,
-            'street' => $street,
-            'postcode' => $postcode,
-            'city' => $city,
-            'email' => $email,
-            'phone_number' => $phone_number,
-            $_FILES => $files
-        ];
-        header("Location: /profil");
-        exit;
     }
-    }
-}
 }
 ?>

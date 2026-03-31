@@ -83,6 +83,10 @@ class UsersService {
         return $this->usersRepository->findById($id);
     }
 
+    public function getUserByEmail(string $email): ?Users {
+        return $this->usersRepository->findByUsername($email);
+    }
+
 public function updatePassword(int $id_user, string $old, string $new, string $confirm): bool {
 
     $user = $this->usersRepository->findById($id_user);

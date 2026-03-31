@@ -71,7 +71,7 @@ a {
     text-transform: uppercase;
 }
 
-.logo-container {
+/*.logo-container {
     display: flex;
     gap: 15px;
     align-items: center;
@@ -196,19 +196,19 @@ a {
 .actu {
     background-image: 
         linear-gradient(to top, rgba(27, 53, 97, 0.95), rgba(27, 53, 97, 0.4)), 
-        url('/assets/img/logo.jpg'); /* Remplace par ton image */
+        url('/assets/img/logo.jpg'); 
 }
 
 .planning {
     background-image: 
         linear-gradient(to top, rgba(91, 48, 44, 0.95), rgba(91, 48, 44, 0.4)), 
-        url('/assets/img/image14.jpg'); /* Remplace par ton image */
+        url('/assets/img/image14.jpg'); 
 }
 
 .boutique {
     background-image: 
         linear-gradient(to top, rgba(193, 100, 62, 0.95), rgba(193, 100, 62, 0.4)), 
-        url('/assets/img/shop-bg.jpg'); /* Remplace par ton image */
+        url('/assets/img/shop-bg.jpg'); 
 }
 
 .menu-card:hover {
