@@ -66,9 +66,11 @@ class UsersRepository {
 
     $stmt->bindValue(":id_try_class", $idClass, $idClass === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
     
-    $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
-    return $stmt->execute();
+        $stmt->bindValue(":id", $users->getIdUser(), PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
+
     // CRUD - DELETE
     public function delete(int $id): bool {
         $stmt = $this->pdo->prepare("DELETE from users WHERE id_user=:id");
