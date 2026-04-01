@@ -31,8 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($planning as $day => $classes): ?>
-                        <?php var_dump($classes); die;?>
+                    <?php foreach ($planning as $day => $sessions): ?>
                         <?php foreach ($sessions as $session): ?>
                             <tr>
                                 <td><?= htmlspecialchars($day) ?></td>
