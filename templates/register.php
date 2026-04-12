@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="assets/css/styleconnexion.css">
+    <!-- <link rel="stylesheet" href="assets/css/styleformulaire.css"> -->
     <title>Inscription Boxing Club LH</title>
 </head>
     <div class="auth-container">

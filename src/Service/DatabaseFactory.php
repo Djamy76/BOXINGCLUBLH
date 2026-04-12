@@ -7,8 +7,8 @@ use \Exception;
 
 
 // Factory to create and configure a PDO instance
-class DatabaseFactory 
-{
+class DatabaseFactory {
+
     /**
      * Creates a new PDO connection based on provided configuration
      * @param array $config The database configuration from .env

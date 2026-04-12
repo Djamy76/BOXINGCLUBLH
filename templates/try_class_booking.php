@@ -1,7 +1,12 @@
+<head>
+    <link rel="stylesheet" href="assets/css/booking.css">
+</head>
+
 <main class="booking-container">
+    <div class="booking-title">
     <h1>Réserve ta <span class="accent">séance d'essai</span></h1>
     <p>Choisis le créneau qui correspond à ta catégorie pour la semaine en cours.</p>
-
+    </div>
     <section class="filter-section">
         <form method="GET" action="/tryClasses" class="filter-form">
             <label for="category">Filtrer par discipline :</label>
@@ -18,6 +23,8 @@
 
     <div class="planning-container">
        <form method="POST" action="/tryClasses" class="booking-form">
+        <!-- on sécurise les formulaires. dans chaque formulaire on passe le token comme champ caché -->
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <div class="planning-grid">
         <?php foreach ($planning as $dateValue => $dayData): ?>
             <div class="planning-column">

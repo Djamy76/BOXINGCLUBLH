@@ -16,7 +16,7 @@ class ProfilController extends AbstractController {
     }
 
     public function index(): void {
-        
+       
         // Redirection vers /login
         if (!$this->authService->isAuthenticated()) {
             $_SESSION['flash_error'] = "Vous devez être connecté pour voir votre profil.";
@@ -32,6 +32,7 @@ class ProfilController extends AbstractController {
         $user = $this->usersService->getUserByIdWithTryClass($id_user);
         $member = $this->membersService->getMemberByUserId($id_user);
 
+
         // AFFICHER la vue
         $this->render('profil', [
             'title' => 'Page de profil',
@@ -39,8 +40,8 @@ class ProfilController extends AbstractController {
             'member'=> $member,
             'isLoggedIn' => true
         ]);
+        
     }
-
     // Affiche le formulaire d'adhésion
     public function showMembershipForm(): void {
         $this->render('membership', [
@@ -51,7 +52,6 @@ class ProfilController extends AbstractController {
 
     // Traite la soumission de l'adhésion par le formulaire
     public function membershipregister(): void {
-       
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->showMembershipForm();
         return;

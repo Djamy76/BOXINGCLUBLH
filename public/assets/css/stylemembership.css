@@ -1,6 +1,6 @@
-/* ------------------------------------- */
+/* ----------------------------------------- */
 /* 1. STYLES GÉNÉRAUX ET MOBILE (PAR DÉFAUT) */
-/* ------------------------------------- */
+/* ----------------------------------------- */
 
 @import url('https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=Bebas+Neue&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 
@@ -131,7 +131,7 @@ body {
     background: var(--club-gray);
     font-family: var(--font-text);
     font-size: 1rem;
-    box-sizing: border-box;
+    box-sizing: content-box;
 }
 
 /* Bouton Connexion */

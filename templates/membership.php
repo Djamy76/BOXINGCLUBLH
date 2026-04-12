@@ -5,6 +5,8 @@
     <div class="auth-title"><h1>REJOINS NOUS</h1></div>
     <div class="auth-page-container">
         <form class="form" action="/membership" method="POST" enctype="multipart/form-data">
+            <!-- on sécurise les formulaires on passe le token comme champ caché -->
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="auth-left">
                 <div class="form-group">
                     <label>Nom</label>
@@ -22,7 +24,7 @@
                     <label>Téléphone</label>
                     <input type="tel" name="phone_number" placeholder="06XXXXXXXX" required>
                 </div>
-                    <h3>Adresse</h3>
+                    <label>Adresse</label>
                     <div class="form-row">
                         <input type="text" name="street_number" placeholder="N°" style="width: 20%;">
                         <input type="text" name="street" placeholder="Rue" style="width: 75%;" required>

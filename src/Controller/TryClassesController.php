@@ -18,11 +18,20 @@ class TryClassesController extends AbstractController {
 
     // Affiche la liste des séances
     public function index(): void {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         // Vérification de l'existence et de la validité du token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+        header('HTTP/1.1 403 Forbidden');
+        exit("Erreur de sécurité : Jeton CSRF invalide.");
+      }
+        // Si le token est valide, on procède au traitement
         $classes = $this->tryClassesService->getAllAvailableClasses();
         
         $this->render('try_class_booking', [
             'availableClasses' => $classes
         ]);
+        }
     }
     // Affiche le formulaire de réservation
     public function showBookingForm(): void {

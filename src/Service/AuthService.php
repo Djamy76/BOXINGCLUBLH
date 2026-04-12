@@ -27,7 +27,7 @@ class AuthService {
         $requiredRole = $this->accessControl[$method] ?? self::ROLE_ADMIN;
         // 0 = admin
         // 1 = user connecté
-        // 9 = tout le monde
+        // -1 = tout le monde
         // null est remplacé par 0 (secure by default, ou, default deny)
 
         $user = $this->getUserEmail();

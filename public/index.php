@@ -1,6 +1,11 @@
 <?php
 session_start();
-    
+
+if (empty($_SESSION['csrf_token'])) {
+// random_byte est cryptographiquement sûre
+// on le stocke dans la SESSION en hexadecimal
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}   
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\{AdminController, HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController, NewsController, TryClassesController};

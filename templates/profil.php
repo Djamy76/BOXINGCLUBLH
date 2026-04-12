@@ -29,10 +29,10 @@
         <div class="profile-grid">    
             <section class="profile-card info-card">
             <h2>Modifier mes informations</h2>
-
-
-
+            <br>
         <form method="POST" action="update-profil" enctype="multipart/form-data">
+            <!-- on sécurise les formulaires. dans chaque formulaire on passe le token comme champ caché -->
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <div class="auth-right">
         <div class="form-group">
             <label>Prénom</label>
@@ -89,12 +89,23 @@
                     <div class="avatar-placeholder"><?= substr($user->getFirstname(), 0, 1) ?></div>
                 <?php endif; ?>
             </div>
-            
+                        
             <div class="info-group">
                 <h3><?= htmlspecialchars($user->getFirstname() . ' ' . $user->getLastname()) ?></h3>
                 <p class="role-badge"><?= $user->getRole() === 0 ? 'Administrateur' : 'Membre LH' ?></p>
             </div>
-
+            <br>
+            <h3>STATUT ADHÉSION</h3>
+             <div class="status-content">
+                <?php if ($member): ?>
+                    <div class="status-badge active">INSCRIPTION VALIDÉE</div>
+                    <p>Votre certificat médical est bien enregistré.</p>
+                <?php else: ?>
+                    <div class="status-badge inactive">DOSSIER INCOMPLET</div>
+                    <p>Vous n'avez pas encore rempli votre fiche d'adhérent.</p>
+                    <a href="/membership" class="btn-main">COMPLÉTER MON DOSSIER</a>
+                <?php endif; ?>
+            </div>
             <ul class="details-list">
                 <li><strong>Email :</strong> <?= htmlspecialchars($user->getEmail()) ?></li>
                 <?php if ($member): ?>
@@ -105,19 +116,7 @@
             <button type="button" class="btn-outline" id="openDialog">MODIFIER MON MOT DE PASSE</button>
         </section>
 
-        <section class="profile-card status-card">
-            <h2>STATUT ADHÉSION</h2>
-            <div class="status-content">
-                <?php if ($member): ?>
-                    <div class="status-badge active">INSCRIPTION VALIDÉE</div>
-                    <p>Votre certificat médical est bien enregistré.</p>
-                <?php else: ?>
-                    <div class="status-badge inactive">DOSSIER INCOMPLET</div>
-                    <p>Vous n'avez pas encore rempli votre fiche d'adhérent.</p>
-                    <a href="/membership" class="btn-main">COMPLÉTER MON DOSSIER</a>
-                <?php endif; ?>
-            </div>
-        </section>
+        
     </div>
     <?php endif;?>
   
