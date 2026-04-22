@@ -11,11 +11,14 @@
                 <form action="/login" method="POST">
                     <div class="form-group">
                         <label for="email">Identifiant</label>
-                        <input type="email" name="email" placeholder="nom@exemple.com" required>
+                        <input type="email" name="email" placeholder="nom@exemple.com" required
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        title="Veuillez entrer une adresse email valide (ex: nom@exemple.com)">>
                     </div>
                     <div class="form-group">
                         <label for="password">Mot de passe</label>
-                        <input type="password" name="password" id="password" placeholder="8 caractères min." required>
+                        <input type="password" name="password" id="password" placeholder="8 caractères min." required
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Le mot de passe doit contenir au moins 8 caractères,1 majuscule et 1 chiffre.">>
                     </div>
                     <div class="form-group">
                         <button type="submit">CONNEXION</button>

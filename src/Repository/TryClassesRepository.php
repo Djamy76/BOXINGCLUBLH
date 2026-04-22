@@ -5,6 +5,10 @@ use App\Entity\TryClasses;
 use \PDO;
 use \DateTime;
 
+/**
+ * Repository dédié aux opérations de lecture et écriture (CRUD) de l'entité TryClasses.
+ * Centralise l'utilisation de PDO.
+ */
 class TryClassesRepository {
     private PDO $pdo;
 
@@ -13,6 +17,11 @@ class TryClassesRepository {
     }
 
     // CRUD - CREATE
+
+    /**
+     * Méthode de création (C du CRUD) utilisant des requêtes préparées 
+     * pour se prémunir contre les injections SQL.
+     */
     public function create(tryClasses $tryClasses): bool {
         $stmt=$this->pdo->prepare("INSERT INTO try_classes (class, class_category,date, time, id_try_class)
             VALUES (:class, :class_category,:date, :time, :id_try_class);");
@@ -24,6 +33,7 @@ class TryClassesRepository {
         $result = $stmt->execute();
         return $result;
     }
+    
     // CRUD - READ
     public function findById(int $id): ?TryClasses {
         $stmt = $this->pdo->prepare("SELECT * from try_classes WHERE id_try_class=:id");
@@ -34,6 +44,7 @@ class TryClassesRepository {
             $tryClasses=new TryClasses($row['class'], $row['class_category'], new DateTime($row['date']), new DateTime($row['time']), $row['id_try_class']);
         return $tryClasses;
     }
+
     function findAll(): array {
         $stmt = $this->pdo->query("SELECT id_try_class, class, class_category, date, from try_classes");
         $tryClasses=[];
@@ -42,6 +53,7 @@ class TryClassesRepository {
         }
             return $tryClasses;
     }
+
     // CRUD - UPDATE
     public function update(tryClasses $tryClasses): bool {
         $stmt=$this->pdo->prepare("UPDATE try_classes SET class=:class, class_category=:class_category, date=:date, time=:time, id_try_class=:id_try_class");
@@ -64,22 +76,31 @@ class TryClassesRepository {
 
     // AUTRES METHODES
 
-    // RECUPERATION DES COURS DE LA SEMAINE ACTUELLE
-
-    public function findByDateRange(\DateTime $start, \DateTime $end): array {
-    $sql = "SELECT * FROM try_classes 
-            WHERE date BETWEEN :start AND :end 
-            ORDER BY date ASC, time ASC";
-            
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([
+    /**
+     * Récupère les séances sur une plage de dates donnée.
+     * Permet l'affichage dynamique du planning hebdomadaire.
+     */
+    public function findByDateRange(\DateTime $start, \DateTime $end, ?string $category = null): array {
+    $sql = "SELECT * FROM try_classes WHERE date BETWEEN :start AND :end";
+    $params = [
         ':start' => $start->format('Y-m-d'),
         ':end'   => $end->format('Y-m-d')
-    ]);
+    ];
+
+    // Ajout dynamique d'une clause WHERE si un filtre par catégorie est appliqué
+    if (!empty($category)) {
+        $sql .= " AND class = :category";
+        $params[':category'] = $category;
+    }
+
+    $sql .= " ORDER BY date ASC, time ASC";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
 
     $classes = [];
+    // Hydratation : conversion des lignes SQL en objets TryClasses
     while ($row = $stmt->fetch()) {
-        // On transforme chaque ligne en objet Entity TryClasses
         $classes[] = new TryClasses(
             $row['class'],
             $row['class_category'],
@@ -89,7 +110,7 @@ class TryClassesRepository {
         );
     }
     return $classes;
-    }
+}
     // Fonctions save et delete pour la gestion du planning par l'administrateur
 
     public function addClass(TryClasses $tryClass): bool {

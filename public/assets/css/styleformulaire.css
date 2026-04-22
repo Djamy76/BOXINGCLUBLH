@@ -234,6 +234,14 @@ button:hover {
         text-align: center;
         gap: 30px;
     }
+    .burger-menu {
+    display: block;       /* CRUCIAL : transforme le span en bloc pour accepter les dimensions */
+    width: 30px;          /* Donne une largeur */
+    height: 4px;          /* Donne une épaisseur */
+    background-color: var(--white); /* N'oublie pas la couleur ! */
+    margin: 5px 0;        /* Espace les barres entre elles */
+    transition: 0.3s;     /* Pour que l'animation soit fluide plus tard */
+}
 
     .auth-left {
         text-align: center;

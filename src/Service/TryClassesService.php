@@ -9,8 +9,12 @@ use \PDO;
 use \PDOException;
 use \DateTime;
 
-
+/**
+ * Service métier gérant la logique complexe des séances d'essai.
+ * Décharge le contrôleur des calculs algorithmiques.
+ */
 class TryClassesService {
+    // ... propriétés et constructeur
     private TryClassesRepository $tryClassesRepository;
     private UsersRepository $usersRepository;
 
@@ -19,12 +23,7 @@ class TryClassesService {
         $this->usersRepository=$repository;        
     }
 
-    public function createTryClass(
-        string $class,
-        string $class_category,
-        DateTime $date,
-        DateTime $time) {
-
+    public function createTryClass(string $class, string $class_category, DateTime $date, DateTime $time) {
         if (empty(trim($class))) {
             throw new Exception("Veuillez sélectionner une séance");
         }
@@ -40,21 +39,21 @@ class TryClassesService {
         $newTryClasses = new TryClasses($class, $class_category, $date, $time);
         $this->tryClassesRepository->create($newTryClasses);
     }
-
    
-    // CALCUL ET ORGANISATION DES JOURS DE LA SEMAINE SUR LE PLANNING
-
+     /**
+     * Génère une structure de planning organisée par jour pour la semaine en cours.
+     * @return array Structure : ['YYYY-MM-DD' => ['label' => 'Lundi 12/04', 'sessions' => [...]]]
+     */
     public function getWeeklyPlanning(?string $category = null): array {
-
-        // 1. Calculer les bornes de la semaine
+        // Initialisation des bornes temporelles (Lundi à Samedi)
         $start = new \DateTime('monday this week');
         $end = clone $start;
         $end->modify('+5 days'); // Jusqu'au samedi
     
-        // Appel au Repository
-        $sessions = $this->tryClassesRepository->findByDateRange($start, $end);
+        // Récupération des données brutes depuis le repository
+        $sessions = $this->tryClassesRepository->findByDateRange($start, $end, $category);
         
-        // Organisation des données
+        // Construction d'un tableau indexé par date pour faciliter l'affichage en colonnes dans la vue
         $planning = [];
         for ($i = 0; $i < 6; $i++) {
             $date = clone $start;
@@ -66,14 +65,18 @@ class TryClassesService {
                 'sessions' => []
             ];
         }
+        // Répartition des sessions dans chaque jour correspondant
         foreach ($sessions as $session) {
-            $day = $session->getDate()->format('Y-m-d');    
+            $day = $session->getDate()->format('Y-m-d'); 
+            if (isset($planning[$day])) {   
             $planning[$day]['sessions'][] = $session;
+            }
         }
         return $planning;
-        }
-    
-    // Fonction utilitaire pour le format de date
+    }
+    /**
+     * Formate une date en français pour l'affichage utilisateur.
+     */
     private function getFrenchDate(\DateTime $date): string {
         $days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
         return $days[$date->format('N') - 1] . ' ' . $date->format('d/m');
@@ -96,17 +99,20 @@ class TryClassesService {
         }
     }
     
+    /**
+     * Gère la réservation d'une séance d'essai.
+     */
     public function bookTryClass(int $id_user, int $id_try_class): bool {
-    // On récupère l'utilisateur
+    // Récupère l'utilisateur
         $user = $this->usersRepository->findById($id_user);
     
         if (!$user) {
             throw new \Exception("Utilisateur non trouvé.");    
         }
-    // On met à jour l'ID de la séance d'essai
+    // Met à jour l'ID de la séance d'essai
         $user->setIdTryClass($id_try_class);
    
-    // On appelle la méthode update du Repository 
+    // Appelle la méthode update du Repository 
         return $this->usersRepository->update($user);
     }
 

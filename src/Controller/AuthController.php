@@ -46,7 +46,7 @@ class AuthController extends AbstractController{
         return;
         }
 
-    // 2. On passe tout le tableau $_POST au service avec capture des exceptions
+    // On passe tout le tableau $_POST au service avec capture des exceptions
         try {
         // On récupère l'id du formulaire s'il existe
             $id_try_class = isset($_POST['id_try_class']) ? (int)$_POST['id_try_class'] : null;
@@ -58,7 +58,6 @@ class AuthController extends AbstractController{
             exit;
 
         } catch (\Exception $e) {
-        // C'est ici que tu "attrapes" l'erreur du mot de passe trop court
         // On attrape l'exception lancée par validUser ou le Repository
             $_SESSION['flash_error'] = $e->getMessage();
             header('Location: /register');

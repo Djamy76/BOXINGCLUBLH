@@ -26,12 +26,10 @@ class UsersService
     {
         // Validation des données (Email, complexité MDP, correspondance)
         $this->validUser($data['email'], $data['password'], $data['confirm_password']);
-
         // Vérification si l'email existe déjà
         if ($this->usersRepository->findByUsername($data['email'])) {
             throw new \Exception("Cette adresse email est déjà utilisée.");
         }
-
         // Hachage du mot de passe
         $hashedPassword = password_hash($data['password'], PASSWORD_ARGON2ID);
 

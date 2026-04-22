@@ -19,7 +19,6 @@
                                 <div class="card-content">
                                     <span class="session-time"><?= (is_object($session) && method_exists($session, 'getTime')) ? $session->getTime()->format('H:i') : htmlspecialchars($session) ?></span>
                                     <span class="session-name"><?= htmlspecialchars($session->getClass()) ?></span>
-                                    <span class="session-cat"><?= htmlspecialchars($session->getClassCategory()) ?></span>
                                 </div>
                             </label>
                         <?php endforeach; ?>

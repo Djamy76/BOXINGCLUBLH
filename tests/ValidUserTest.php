@@ -35,6 +35,7 @@ class ValidUserTest extends TestCase {
         // 4. Action
         $service->validUser("rocky.Balboa@gmail.com", 'Rocky1', 'Rocky1'); 
     }
+    
     public function testCanValidUserPasswordStrongFormat(): void {
 
         // 1. Create a "Mock" of the repository (we don't need a real DB)

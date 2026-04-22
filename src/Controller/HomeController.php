@@ -13,12 +13,12 @@ class HomeController extends AbstractController{
         $this->authService = $authService;
     }
     public function index(): void {
-        $email = $_SESSION['user_email'] ?? null;
+        $email = $_SESSION['email'] ?? null;
         $user = null;
 
         if ($email) {
         // On récupère l'objet complet via le service
-            $user = $this->usersService->getUserByEmail($_SESSION['user_email']);
+            $user = $this->usersService->getUserByEmail($_SESSION['email']);
         }
 
         $this->render('home', [

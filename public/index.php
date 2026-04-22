@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 if (empty($_SESSION['csrf_token'])) {
 // random_byte est cryptographiquement sûre
 // on le stocke dans la SESSION en hexadecimal
@@ -8,8 +9,8 @@ if (empty($_SESSION['csrf_token'])) {
 }   
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{AdminController, HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController, NewsController, TryClassesController};
-use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService, TryClassesService};
+use App\Controller\{AdminController, HomeController,AuthController,AbstractController,ErrorController,ProfilController,MentionsLegalesController, NewsController, TryClassesController, CoachesController};
+use App\Service\{AuthService, UsersService, DatabaseFactory, MembersService, TryClassesService, CoachesService};
 use App\Repository\{CompetitionsRepository, LegalRepRepository, MembersRepository, UsersRepository, TryClassesRepository};
 
     //on se connecte à PDO
@@ -35,6 +36,7 @@ $usersService = new UsersService($usersRepository);
 $membersService = new MembersService($membersRepository,$usersRepository);
 $tryClassesService = new TryClassesService($tryClassesRepository,$usersRepository);
 $authService = new AuthService($usersRepository, $membersRepository, $tryClassesRepository);
+$coachesService = new CoachesService();
 
 // On instancie les contrôleurs nécessaires
 $adminController = new AdminController($authService, $usersService, $tryClassesService);
@@ -44,6 +46,7 @@ $profilController = new ProfilController($usersService, $authService, $membersSe
 $tryClassesController = new TryClassesController($tryClassesService, $usersService, $authService);
 $mentionsLegalesController = new MentionsLegalesController($pdo);
 $newsController = new NewsController($pdo);
+$coachesController = new CoachesController($coachesService);
 
 // 1. Nettoyer l'URI pour enlever le dossier racine si nécessaire
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -120,13 +123,20 @@ switch ($uri) {
             $profilController->showMembershipForm();
         }
         break; 
+    
     case '/tryClasses':
+        // Affichage planning et filtre
+            $tryClassesController->index();
+        break; 
+
+    case '/try_booking':
+        // Enregistrement de la réservation en base
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tryClassesController->book();
         } else {
-            $tryClassesController->showBookingForm();
+        header('Location: /tryClasses');
         }
-        break;     
+        break;
     case '/cancel-trial':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tryClassesController->cancelTry();
@@ -152,6 +162,9 @@ switch ($uri) {
     case '/actualites':
         $newsController = new App\Controller\NewsController();
         $newsController->index();
+    break;
+    case '/coaches':
+        $coachesController->index();
     break;
     default:
         $errorController = new App\Controller\ErrorController();

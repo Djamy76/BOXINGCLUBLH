@@ -5,7 +5,12 @@ use App\Service\TryClassesService;
 use App\Service\UsersService;
 use App\Service\AuthService;
 
+/**
+ * Controller gérant la logique de réservation des séances d'essai.
+ * Il fait le lien entre les services métiers et les vues.
+ */
 class TryClassesController extends AbstractController {
+    // Utilisation de l'injection de dépendances pour plus de flexibilité et de testabilité
     private TryClassesService $tryClassesService;
     private UsersService $usersService;
     private AuthService $authService;
@@ -16,24 +21,29 @@ class TryClassesController extends AbstractController {
         $this->authService = $authService;
     }
 
-    // Affiche la liste des séances
+    /**
+     * Gère l'affichage de la page de réservation d'une séance d'essai 
+     * avec possibilité de filtrage par catégorie.
+     */
     public function index(): void {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-         // Vérification de l'existence et de la validité du token
-        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        // Erreur 403 : Accès interdit ou tentative de fraude
-        header('HTTP/1.1 403 Forbidden');
-        exit("Erreur de sécurité : Jeton CSRF invalide.");
-      }
-        // Si le token est valide, on procède au traitement
-        $classes = $this->tryClassesService->getAllAvailableClasses();
-        
+        // Récupération sécurisée du filtre de catégorie via l'URL
+        $category = $_GET['category'] ?? null;
+
+        // Délégation de la logique de calcul du planning au service dédié
+        $planning = $this->tryClassesService->getWeeklyPlanning($category);
+
+        // Transmission des données à la vue via la méthode render héritée de l'AbstractController
         $this->render('try_class_booking', [
-            'availableClasses' => $classes
+            'title'           => "Réserver une séance d'essai",
+            'planning'        => $planning,
+            'currentCategory' => $category,
+            'isLoggedIn'      => $this->authService->isAuthenticated()
         ]);
-        }
-    }
-    // Affiche le formulaire de réservation
+    }       
+
+    /**
+     * Gère l'affichage du formulaire de réservation
+     */
     public function showBookingForm(): void {
         // On demande les données prêtes au service
         $planning = $this->tryClassesService->getWeeklyPlanning();
@@ -46,7 +56,18 @@ class TryClassesController extends AbstractController {
         ]);
     }
 
+    /**
+     * Gère le traitement du formulaire de réservation (POST).
+     */
     public function book(): void {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Sécurité : Vérification du jeton CSRF pour prévenir les attaques de type Cross-Site Request Forgery
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+        header('HTTP/1.1 403 Forbidden');
+        exit("Erreur de sécurité : Jeton CSRF invalide.");
+        }
+        // Vérification de l'état de connexion de l'utilisateur
         if(!$this->authService->isAuthenticated()) {
             header('Location: /login');
             exit;
@@ -56,16 +77,21 @@ class TryClassesController extends AbstractController {
         $id_user = (int)$_SESSION['id_user'];
 
         try {
+            // Appel au service pour enregistrer la réservation en base de données
             $this->tryClassesService->bookTryClass($id_user, $id_try_class);
             $_SESSION['flash_success'] = "Ta séance d'essai a bien été réservée !";
         } catch (\Exception $e) {
             $_SESSION['flash_error'] = "Erreur : " . $e->getMessage();
         }
-
-        header('Location: /profil'); // Redirection vers le profil pour voir le récap
+        // Redirection Post-Redirect-Get pour éviter la soumission multiple du formulaire
+        header('Location: /profil'); 
         exit;
+        }
     }
 
+    /**
+     * Annulation d'une réservation existante.
+     */
     public function cancelTry(): void {
         if ($this->authService->isAuthenticated()) {
             $id_user = (int)$_SESSION['id_user'];   
@@ -76,11 +102,14 @@ class TryClassesController extends AbstractController {
         exit;
     }
     
+    /**
+     * Gère l'affichage du planning organisé par jours.
+     */
     public function showPlanning(): void {
-        // 1. On récupère le planning organisé par jours
+        // Récupération du planning organisé par jours
         $planning = $this->tryClassesService->getWeeklyPlanning();
 
-        // 2. On affiche une vue spécifique "consultation"
+        // Affichage d'une vue spécifique "consultation"
         $this->render('planning', [
             'title' => 'Planning du Club',
             'planning' => $planning,

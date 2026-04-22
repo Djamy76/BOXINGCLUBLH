@@ -3,6 +3,10 @@ namespace App\Entity;
 
 use DateTime;
 
+/**
+ * Entité TryClasses représentant une séance d'essai en base de données.
+ * Utilisation de l'encapsulation (propriétés privées et accesseurs).
+ */
 class TryClasses {
     private ?int $id_try_class;
     private string $class;
@@ -23,7 +27,7 @@ class TryClasses {
         $this->time=$time;
     }
 
-
+    // Getters et Setters pour manipuler les données de l'objet de manière sécurisée
     public function getIdTryClass(): ?int
     {
         return $this->id_try_class;

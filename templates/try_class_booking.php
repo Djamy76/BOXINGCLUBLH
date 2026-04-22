@@ -12,9 +12,8 @@
             <label for="category">Filtrer par discipline :</label>
             <select name="category" id="category" onchange="this.form.submit()">
                 <option value="">Toutes les catégories</option>
-                <option value="Boxe Éducative" <?= ($currentCategory ?? '') === 'Boxe Éducative' ? 'selected' : '' ?>>Boxe Éducative</option>
                 <option value="Boxe Amateur" <?= ($currentCategory ?? '') === 'Boxe Amateur' ? 'selected' : '' ?>>Boxe Amateur</option>
-                <option value="Cardio Boxe" <?= ($currentCategory ?? '') === 'Cardio Boxe' ? 'selected' : '' ?>>Cardio Boxe</option>
+                <option value="Boxe Educative" <?= ($currentCategory ?? '') === 'Boxe Educative' ? 'selected' : '' ?>>Boxe Educative</option>
                 <option value="Boxe Pro" <?= ($currentCategory ?? '') === 'Boxe Pro' ? 'selected' : '' ?>>Boxe Pro</option>
                 <option value="Boxe Training" <?= ($currentCategory ?? '') === 'Boxe Training' ? 'selected' : '' ?>>Boxe Training</option>
             </select>
@@ -22,8 +21,8 @@
     </section>
 
     <div class="planning-container">
-       <form method="POST" action="/tryClasses" class="booking-form">
-        <!-- on sécurise les formulaires. dans chaque formulaire on passe le token comme champ caché -->
+       <form method="POST" action="/try_booking" class="booking-form">
+        <!-- on sécurise les formulaire on passe le token comme champ caché -->
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <div class="planning-grid">
         <?php foreach ($planning as $dateValue => $dayData): ?>
@@ -42,7 +41,6 @@
                                 
                                 <div class="card-content">
                                     <span class="session-time"><?= $session->getTime()->format('H:i') ?></span>
-                                    <span class="session-name"><?= htmlspecialchars($session->getClass()) ?></span>
                                     <span class="session-cat"><?= htmlspecialchars($session->getClassCategory()) ?></span>
                                 </div>
                             </label>

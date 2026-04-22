@@ -54,6 +54,7 @@ class AuthService {
     public function login(string $email, string $password): bool {
         $user = $this->usersRepository->findByUsername($email);
      // On vérifie si l'utilisateur existe et si le mot de passe est correct
+    
         if ($user && password_verify($password, $user->getPassword())) {
             // On remplit la session avec les infos essentielles
             $_SESSION['id_user'] = $user->getIdUser();
@@ -61,7 +62,6 @@ class AuthService {
             $_SESSION['role'] = (int)$user->getRole();
             return true;
         }
-
         return false;
     }  
 

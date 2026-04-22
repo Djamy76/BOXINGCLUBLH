@@ -36,9 +36,10 @@
             <ul class="nav-links" id="nav-menu">
                 <li><a href="/home">Accueil</a></li>
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 0): ?>
-                    <li><a href="/admin" style="color: var(--club-red); font-weight: bold;">ADMIN</a></li>
+                    <li><a href="/admin" class="btn-admin">ADMIN</a></li>
                 <?php endif; ?>
                 <li><a href="/membership">Adhérer</a></li>
+                <li><a href="/coachs">Nos coachs</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/tchat">Tchat</a></li>
                 <li><a href="/about">A propos</a></li>
@@ -57,8 +58,8 @@
             <?= $content ?>
         </div>
         <?php if (!isset($_COOKIE['rgpd_consent'])): ?>
-            <div id="rgpd-banner" style="position: fixed; bottom: 0; left: 0; width: 100%; background: var(--club-dark); color: white; padding: 20px; z-index: 9999; border-top: 3px solid var(--club-red); box-shadow: 0 -5px 15px rgba(0,0,0,0.3);">
-                <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div id="rgpd-banner">
+                <div class="container">
                     <div style="flex: 1; min-width: 300px;">
                         <p style="margin: 0; font-size: 0.95rem; font-family: var(--font-text);">
                             🥊 <strong>Prêt pour le combat ?</strong> Pour vous offrir la meilleure expérience sur le ring numérique, nous utilisons des cookies et traitons vos données selon notre
@@ -66,10 +67,10 @@
                         </p>
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button onclick="acceptRGPD()" style="background: var(--club-red); color: white; border: none; padding: 10px 20px; font-family: var(--font-main); cursor: pointer; border-radius: 4px; text-transform: uppercase;">
+                        <button id="accept-rgpd" onclick="acceptRGPD()">
                             J'accepte
                         </button>
-                        <button onclick="closeBanner()" style="background: transparent; color: #ccc; border: 1px solid #ccc; padding: 10px 20px; cursor: pointer; border-radius: 4px;">
+                        <button id="close-banner" onclick="closeBanner()">
                             Plus tard
                         </button>
                     </div>
@@ -96,6 +97,7 @@
 
     <footer class="legal-footer">
         <p>Suivez le combat sur nos réseaux :</p>
+
         <div class="social-links">
             <a href="https://facebook.com/tonclub" target="_blank" class="social-icon fb">
                 <i class="fab fa-facebook-f"></i>
@@ -104,8 +106,12 @@
                 <i class="fab fa-instagram"></i>
             </a>
         </div>
-        <a href="/mentions_legales">Mentions Légales</a> |
-        <a href="/privacy">Politique de Confidentialité (RGPD)</a>
+
+        <div class="footer-links">
+            <a href="/mentions_legales">Mentions Légales</a>
+            <span>|</span>
+            <a href="/privacy">Confidentialité</a>
+        </div>
     </footer>
 </body>
 

@@ -75,5 +75,36 @@ class AdminController extends AbstractController {
     header('Location: /admin_planning');
     exit;
     }
+
+    public function changePassword(): void {
+    // 1. Sécurité : Vérifier si l'utilisateur est admin
+    if (!$this->authService->isAdmin()) { 
+        header('Location: /login'); 
+        exit; 
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            // On récupère l'ID de l'admin connecté (généralement en session)
+            $adminId = $_SESSION['user_id']; 
+
+            // Appel de la méthode du service
+            $this->usersService->updatePassword(
+                $adminId, 
+                $_POST['old_password'], 
+                $_POST['new_password'], 
+                $_POST['confirm_password']
+            );
+
+            $_SESSION['flash_success'] = "Mot de passe mis à jour avec succès !";
+        } catch (\Exception $e) {
+            // En cas d'erreur (mauvais ancien MDP, complexité insuffisante, etc.)
+            $_SESSION['flash_error'] = $e->getMessage();
+        }
+    }
+    
+    header('Location: /admin_planning'); // Ou une autre page de ton choix
+    exit;
+    }
 }
 ?>

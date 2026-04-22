@@ -1,13 +1,22 @@
+/**
+ * Gestion de l'interactivité côté client.
+ * Ce script centralise les manipulations du DOM pour améliorer l'UX.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    /* ==========================================
-       GESTION DU MENU BURGER (Toutes pages)
-       ========================================== */
+
+    /* =====================================================
+        GESTION DU MENU MOBILE (Responsive)
+       ===================================================== */
+
+    // Sélection des éléments du menu burger pour gérer l'affichage sur mobile
     const burgerBtn = document.getElementById('burger-btn');
     const navMenu = document.getElementById('nav-menu');
 
     if (burgerBtn && navMenu) {
         burgerBtn.addEventListener('click', () => {
+            // Utilisation de toggle pour ajouter/retirer la classe 'active'
+            // Cela permet de faire apparaître le menu en CSS (via des transitions)
             navMenu.classList.toggle('active');
             burgerBtn.classList.toggle('open');
         });
@@ -21,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ==========================================
+    /* =====================================================
        GESTION DE LA MODALE PROFIL (Page Profil uniquement)
-       ========================================== */
+       ===================================================== */
     const pwdDialog = document.getElementById('pwdDialog');
-    const openBtn = document.getElementById('openDialog'); // Vérifie que ton bouton "Modifier" a bien cet ID
+    const openBtn = document.getElementById('openDialog'); 
     const closeBtn = document.getElementById('closeDialog');
 
     if (pwdDialog && openBtn && closeBtn) {
@@ -37,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pwdDialog.close();
         });
 
-        // Fermer la modale si on clique à l'extérieur du cadre (sur le backdrop)
+        // Ferme la modale si on clique à l'extérieur du cadre
         pwdDialog.addEventListener('click', (e) => {
             const dialogDimensions = pwdDialog.getBoundingClientRect();
             if (
@@ -51,26 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     /* ==========================================
-   GESTION DE LA SÉLECTION DU PLANNING
-   ========================================== */
+       GESTION DE LA SÉLECTION DU PLANNING
+    ========================================== */
 
-const sessionCards = document.querySelectorAll('.session-card');
+    const sessionCards = document.querySelectorAll('.session-card');
 
-sessionCards.forEach(card => {
-    card.addEventListener('click', () => {
-        // 1. On retire la classe 'selected' de toutes les autres cartes
-        sessionCards.forEach(c => c.classList.remove('selected'));
+    sessionCards.forEach(card => {
+        card.addEventListener('click', () => {
+            // 1. On retire la classe 'selected' de toutes les autres cartes
+            sessionCards.forEach(c => c.classList.remove('selected'));
         
-        // 2. On ajoute la classe à la carte cliquée
-        card.classList.add('selected');
+            // 2. On ajoute la classe à la carte cliquée
+            card.classList.add('selected');
 
-        // 3. On s'assure que le bouton radio caché à l'intérieur est coché
-        const radio = card.querySelector('input[type="radio"]');
-        if (radio) {
-            radio.checked = true;
-        }
+            // 3. On s'assure que le bouton radio caché à l'intérieur est coché
+            const radio = card.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
+        });
     });
-});
 });
 
  /* ==========================================
@@ -88,3 +97,19 @@ const canonical = document.querySelector("link[rel='canonical']");
 if(routes[path]){
     canonical.href = window.location.origin + path;
 }
+ /* ==========================================
+    AFFICHAGE DU MOT DE PASSE
+   ========================================== */
+
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // On bascule le type
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // On change l'icône (optionnel)
+        this.textContent = type === 'password' ? '👁️' : 'X';
+    }
+);

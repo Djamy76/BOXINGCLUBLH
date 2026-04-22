@@ -3,11 +3,9 @@
         <h1>MON COMPTE <span class="accent">BOXEUR</span></h1>
         <div class="divider"></div>
     </header>
-
            <?php if (!$member): ?>
             <p>Vous n'êtes pas encore adhérent au club. <a href="/membership">Compléter mon dossier</a></p>
                 <h2>Ma Séance d'Essai</h2>
-
                 <?php if ($user->getTryClasses()): ?>
                 <div class="status-content">
                 <p>Tu es inscrit à la séance : <strong><?= htmlspecialchars($user->getTryClasses()->getClass()) ?></strong></p>
@@ -25,7 +23,7 @@
                 Réserver un créneau
                 </a>
                 <?php endif; ?>
-        <?php else: ?>  
+            <?php else: ?>  
         <div class="profile-grid">    
             <section class="profile-card info-card">
             <h2>Modifier mes informations</h2>
@@ -78,7 +76,6 @@
         </div>
         <button type="submit" class="btn-main">Mettre à jour</button>
     </form>
-
     <?php unset($_SESSION['old_input']); ?>
     </section>                
         <section class="profile-card info-card">
@@ -89,7 +86,6 @@
                     <div class="avatar-placeholder"><?= substr($user->getFirstname(), 0, 1) ?></div>
                 <?php endif; ?>
             </div>
-                        
             <div class="info-group">
                 <h3><?= htmlspecialchars($user->getFirstname() . ' ' . $user->getLastname()) ?></h3>
                 <p class="role-badge"><?= $user->getRole() === 0 ? 'Administrateur' : 'Membre LH' ?></p>
@@ -114,13 +110,11 @@
                 <?php endif; ?>
             </ul>
             <button type="button" class="btn-outline" id="openDialog">MODIFIER MON MOT DE PASSE</button>
-        </section>
-
-        
+        </section>  
     </div>
     <?php endif;?>
   
-    <dialog id="pwdDialog" class="lh-modal">
+    <dialog id="pwdDialog" class="modal-security">
         <form method="POST" action="/profil/update-password">
             <h2>SÉCURITÉ</h2>
             <p>Changez votre mot de passe ci-dessous</p>

@@ -9,12 +9,12 @@
 .booking-container { 
     padding: 40px; 
     text-align: center; 
-    color: white; }
+    color: black; }
 
 .slots-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 20px; margin-top: 0px; }
+    gap: 20px; margin-top: 10px; }
 
 .class-card { 
     background: #1a1a1a; 
@@ -41,6 +41,12 @@
     justify-content: space-around; 
     font-size: 0.9rem; 
     margin-bottom: 20px; }
+    
+label.session-card {
+    margin-top: 10px;
+    padding-block: 10px;
+    border: 0px;
+}
 
 .btn-book { 
     background: #ff4d4d; 
